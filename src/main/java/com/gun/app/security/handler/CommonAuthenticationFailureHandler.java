@@ -17,10 +17,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 공통 실패 처리 핸들러
+ */
 @Component
 @RequiredArgsConstructor
 public class CommonAuthenticationFailureHandler implements AuthenticationFailureHandler {
     private final ObjectMapper objectMapper;
+
+    /**
+     * 실패 시 처리 로직
+     * TODO: 예외에 따른 메시지를 response 해줌.
+     * @param request
+     * @param response
+     * @param exception
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

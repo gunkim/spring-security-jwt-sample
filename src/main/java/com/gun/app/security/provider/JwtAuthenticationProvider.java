@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * JWT 토큰 유효성 검증을 위한 실질 적인 인증 로직이 구현된 클래스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -24,6 +27,12 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final AuthenticationFailureHandler failureHandler;
 
+    /**
+     * JWT 유효성 검증
+     * @param authentication
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Jws<Claims> jwsClaims = (Jws<Claims>)authentication.getCredentials();

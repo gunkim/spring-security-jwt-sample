@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,12 +17,22 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 비동기 로그인에 대한 실질적인 인증 처리 로직이 구현된 클래스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class AsyncAuthenticationProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
+
+    /**
+     * 인증 처리 로직
+     * @param authentication
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if(authentication == null){

@@ -2,7 +2,6 @@ package com.gun.app.security.service;
 
 import com.gun.app.domain.Member;
 import com.gun.app.domain.MemberRepository;
-import com.gun.app.domain.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,12 +15,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * 유저 정보를 반환하는 클래스
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
+    /**
+     * 유저 정보를 조회 후 반환.
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optMember = memberRepository.findByUsername(username);

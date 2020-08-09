@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * json 요청에 대한 username, password을 저장함.
+ */
 @Getter
 @ToString
 public class LoginRequest {

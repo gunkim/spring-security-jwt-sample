@@ -8,6 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+/**
+ * JWT 유효성 검증을 위한 Token
+ */
 @Getter
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = 5816307710547739210L;

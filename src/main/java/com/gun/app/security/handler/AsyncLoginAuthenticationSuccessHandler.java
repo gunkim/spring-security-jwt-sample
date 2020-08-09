@@ -27,11 +27,24 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 비동기 로그인 성공 처리 핸들러
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class AsyncLoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
+
+    /**
+     * 성공 시 처리 로직.
+     * TODO: 토큰을 발행하여 response해준다.
+     * @param request
+     * @param response
+     * @param authentication
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String username = (String) authentication.getPrincipal();

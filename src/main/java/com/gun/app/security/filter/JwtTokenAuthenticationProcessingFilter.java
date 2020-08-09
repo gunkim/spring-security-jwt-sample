@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * JWT 토큰 유효성 검증을 위한 시큐리티 필터
+ */
 @Slf4j
 public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
     private final AuthenticationFailureHandler failureHandler;
@@ -28,6 +31,16 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         super(matcher);
         this.failureHandler = failureHandler;
     }
+
+    /**
+     * 요청 Header에서 JWT토큰을 획득하여 JwtAuthenticationToken 토큰을 생성함.
+     * @param request
+     * @param response
+     * @return
+     * @throws AuthenticationException
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         String tokenPayload = request.getHeader(SecurityConfig.AUTHENTICATION_HEADER_NAME);
@@ -45,19 +58,35 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(claimsJws));
     }
 
+    /**
+     * 인증(Authentication) 성공 시 실행
+     * @param request
+     * @param response
+     * @param chain
+     * @param authResult
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        log.info("성공! ");
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
         chain.doFilter(request, response);
     }
 
+    /**
+     * 인증(Authentication) 실패 시 실행
+     * @param request
+     * @param response
+     * @param failed
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        log.info("실패! ");
         SecurityContextHolder.clearContext();
+        //FailureHandler에 처리 로직 위임
         failureHandler.onAuthenticationFailure(request, response, failed);
     }
 }
