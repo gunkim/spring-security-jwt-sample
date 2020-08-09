@@ -2,6 +2,7 @@ package com.gun.app.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gun.app.security.JwtAuthenticationToken;
+import com.gun.app.security.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -49,24 +50,11 @@ public class AsyncLoginAuthenticationSuccessHandler implements AuthenticationSuc
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String username = (String) authentication.getPrincipal();
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
-
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("roles", authorities.stream().map(role -> role.toString()).collect(Collectors.toList()));
-
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .setIssuer("gunkim")
-                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(Date.from(currentTime.plusMinutes(30 * 60 * 1000)
-                        .atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, "MY Secret Key")
-                .compact();
+        String jwtToken = JwtUtil.createToken(username, authorities);
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), token);
+        objectMapper.writeValue(response.getWriter(), jwtToken);
 
         HttpSession session = request.getSession(false);
 

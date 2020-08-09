@@ -3,6 +3,7 @@ package com.gun.app.security.filter;
 import com.gun.app.security.JwtAuthenticationToken;
 import com.gun.app.security.config.SecurityConfig;
 import com.gun.app.security.exception.JwtExpiredTokenException;
+import com.gun.app.security.util.JwtUtil;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,19 +43,11 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
      * @throws ServletException
      */
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
         String tokenPayload = request.getHeader(SecurityConfig.AUTHENTICATION_HEADER_NAME);
 
-        Jws<Claims> claimsJws = null;
-        try {
-            claimsJws = Jwts.parser().setSigningKey("MY Secret Key").parseClaimsJws(tokenPayload);
-        } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
-            logger.error("Invalid JWT Token", ex);
-            throw new BadCredentialsException("Invalid JWT token: ", ex);
-        } catch (ExpiredJwtException expiredEx) {
-            logger.info("JWT Token is expired", expiredEx);
-            throw new JwtExpiredTokenException(claimsJws.toString(), "JWT Token expired", expiredEx);
-        }
+        Jws<Claims> claimsJws = JwtUtil.parserToken(tokenPayload);
+
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(claimsJws));
     }
 
