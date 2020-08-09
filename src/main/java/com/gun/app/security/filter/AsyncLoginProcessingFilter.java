@@ -46,7 +46,7 @@ public class AsyncLoginProcessingFilter extends AbstractAuthenticationProcessing
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         if(!HttpMethod.POST.name().equals(request.getMethod()) || this.isAsync(request)){
-            logger.debug("비동기 로그인 처리 지원이 되지 않는 메소드 요청입니다. :: "+request.getMethod());
+            log.debug("비동기 로그인 처리 지원이 되지 않는 메소드 요청입니다. :: "+request.getMethod());
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
         LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
