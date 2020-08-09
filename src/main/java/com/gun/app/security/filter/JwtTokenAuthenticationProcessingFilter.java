@@ -47,6 +47,7 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        log.info("성공! ");
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
@@ -55,6 +56,7 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        log.info("실패! ");
         SecurityContextHolder.clearContext();
         failureHandler.onAuthenticationFailure(request, response, failed);
     }

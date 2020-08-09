@@ -1,6 +1,5 @@
 package com.gun.app.security.provider;
 
-import com.gun.app.security.model.UserContext;
 import com.gun.app.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +42,7 @@ public class AsyncAuthenticationProvider implements AuthenticationProvider {
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
                 .collect(Collectors.toList());
 
-        UserContext userContext = UserContext.create(user.getUsername(), authorities);
-
-        return new UsernamePasswordAuthenticationToken(userContext, null, userContext.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
     }
 
     @Override

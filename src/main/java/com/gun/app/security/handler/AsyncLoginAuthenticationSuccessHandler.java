@@ -1,7 +1,7 @@
 package com.gun.app.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gun.app.security.model.UserContext;
+import com.gun.app.security.JwtAuthenticationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,10 +34,11 @@ public class AsyncLoginAuthenticationSuccessHandler implements AuthenticationSuc
     private final ObjectMapper objectMapper;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        UserContext userContext = (UserContext) authentication.getPrincipal();
+        String username = (String) authentication.getPrincipal();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
 
-        Claims claims = Jwts.claims().setSubject(userContext.getUsername());
-        claims.put("roles", userContext.getAuthorities().stream().map(role -> role.toString()).collect(Collectors.toList()));
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("roles", authorities.stream().map(role -> role.toString()).collect(Collectors.toList()));
 
         LocalDateTime currentTime = LocalDateTime.now();
 

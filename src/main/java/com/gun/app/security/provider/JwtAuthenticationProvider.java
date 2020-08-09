@@ -1,7 +1,6 @@
 package com.gun.app.security.provider;
 
 import com.gun.app.security.JwtAuthenticationToken;
-import com.gun.app.security.model.UserContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -35,9 +34,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        UserContext context = UserContext.create(subject, authorities);
-
-        return new JwtAuthenticationToken(context, context.getAuthorities());
+        return new JwtAuthenticationToken(subject, authorities);
     }
 
     @Override
