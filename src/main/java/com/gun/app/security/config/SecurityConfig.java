@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name())
                 .antMatchers("/api/say/userHello").hasAnyRole(Role.USER.name())
                 .and()
-                .addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(buildAsyncLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(permitAllEndpointList, API_ROOT_URL), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -78,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @return
      * @throws Exception
      */
-    private AsyncLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
+    private AsyncLoginProcessingFilter buildAsyncLoginProcessingFilter() throws Exception {
         AsyncLoginProcessingFilter filter = new AsyncLoginProcessingFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
         filter.setAuthenticationManager(this.authenticationManager());
         return filter;
