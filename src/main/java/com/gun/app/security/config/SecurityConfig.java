@@ -28,7 +28,6 @@ import java.util.List;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String AUTHENTICATION_HEADER_NAME = "Authorization";
     public static final String AUTHENTICATION_URL = "/api/auth/login";
-    public static final String REFRESH_TOKEN_URL = "/api/auth/token";
     public static final String API_ROOT_URL = "/api/**";
 
     private final AuthenticationSuccessHandler successHandler;
@@ -47,8 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         List<String> permitAllEndpointList = Arrays.asList(
-                AUTHENTICATION_URL,
-                REFRESH_TOKEN_URL
+                AUTHENTICATION_URL
         );
         http
                 .csrf().disable()
