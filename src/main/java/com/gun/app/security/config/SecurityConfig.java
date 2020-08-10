@@ -31,13 +31,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String REFRESH_TOKEN_URL = "/api/auth/token";
     public static final String API_ROOT_URL = "/api/**";
 
-    public final AuthenticationSuccessHandler successHandler;
-    public final AuthenticationFailureHandler failureHandler;
+    private final AuthenticationSuccessHandler successHandler;
+    private final AuthenticationFailureHandler failureHandler;
 
-    public final AsyncAuthenticationProvider asyncAuthenticationProvider;
+    private final AsyncAuthenticationProvider asyncAuthenticationProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-    public final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     /**
      * 시큐리티 설정
