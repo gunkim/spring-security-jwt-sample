@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
     @Value("${jwt.token.secret-key}")
-    private String SECRET_KEY;
+    private String secretKey;
     @Value("${jwt.token.expTime}")
-    private long EXPIRATION_TIME;
+    private long expirationTime;
     @Value("${jwt.token.issuer}")
-    private String ISSUER;
+    private String issuer;
 
     /**
      * JWT 토큰 생성
@@ -41,11 +41,11 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuer(ISSUER)
+                .setIssuer(issuer)
                 .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(Date.from(currentTime.plusMinutes(EXPIRATION_TIME)
+                .setExpiration(Date.from(currentTime.plusMinutes(expirationTime)
                         .atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
@@ -59,7 +59,7 @@ public class JwtUtil {
     public Jws<Claims> parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException{
         Jws<Claims> claimsJws = null;
         try {
-            claimsJws = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             throw new BadCredentialsException("Invalid JWT token: ", ex);
         } catch (ExpiredJwtException expiredEx) {
