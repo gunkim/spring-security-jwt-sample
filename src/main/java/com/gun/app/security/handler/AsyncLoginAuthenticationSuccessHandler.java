@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AsyncLoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
+    private final JwtUtil jwtUtil;
 
     /**
      * 성공 시 처리 로직.
@@ -50,7 +51,7 @@ public class AsyncLoginAuthenticationSuccessHandler implements AuthenticationSuc
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String username = (String) authentication.getPrincipal();
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
-        String jwtToken = JwtUtil.createToken(username, authorities);
+        String jwtToken = jwtUtil.createToken(username, authorities);
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

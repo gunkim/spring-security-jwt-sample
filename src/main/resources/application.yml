@@ -1,0 +1,5 @@
+jwt:
+  token:
+    secret-key: "hello"
+    expTime: 1800000
+    issuer: "gunkim"

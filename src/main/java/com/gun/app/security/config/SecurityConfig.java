@@ -7,6 +7,7 @@ import com.gun.app.security.filter.AsyncLoginProcessingFilter;
 import com.gun.app.security.filter.JwtTokenAuthenticationProcessingFilter;
 import com.gun.app.security.provider.AsyncAuthenticationProvider;
 import com.gun.app.security.provider.JwtAuthenticationProvider;
+import com.gun.app.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     private final ObjectMapper objectMapper;
+    private final JwtUtil jwtUtil;
 
     /**
      * 시큐리티 설정
@@ -93,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter(List<String> pathsToSkip, String pattern) throws Exception {
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, pattern);
-        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(matcher, failureHandler);
+        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(matcher, failureHandler, jwtUtil);
         filter.setAuthenticationManager(this.authenticationManager());
         return filter;
     }

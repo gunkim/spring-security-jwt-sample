@@ -27,10 +27,12 @@ import java.io.IOException;
 @Slf4j
 public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
     private final AuthenticationFailureHandler failureHandler;
+    private final JwtUtil jwtUtil;
 
-    public JwtTokenAuthenticationProcessingFilter(RequestMatcher matcher, AuthenticationFailureHandler failureHandler) {
+    public JwtTokenAuthenticationProcessingFilter(RequestMatcher matcher, AuthenticationFailureHandler failureHandler, JwtUtil jwtUtil) {
         super(matcher);
         this.failureHandler = failureHandler;
+        this.jwtUtil = jwtUtil;
     }
 
     /**
@@ -46,7 +48,7 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
         String tokenPayload = request.getHeader(SecurityConfig.AUTHENTICATION_HEADER_NAME);
 
-        Jws<Claims> claimsJws = JwtUtil.parserToken(tokenPayload);
+        Jws<Claims> claimsJws = jwtUtil.parserToken(tokenPayload);
 
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(claimsJws));
     }
