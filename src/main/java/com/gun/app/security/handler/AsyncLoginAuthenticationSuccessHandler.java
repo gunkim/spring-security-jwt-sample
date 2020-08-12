@@ -59,9 +59,8 @@ public class AsyncLoginAuthenticationSuccessHandler implements AuthenticationSuc
 
         HttpSession session = request.getSession(false);
 
-        if (session == null) {
-            return;
+        if (session != null) {
+            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         }
-        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
 }
