@@ -16,10 +16,10 @@ dependencies {
 대충 흐름을 그려보았는데 아래와 같은 그림이 될 것 같다.
 
 ## 로그인 시
-![](jwt-security-login.png)
+![1](https://user-images.githubusercontent.com/45007556/104460769-dbeaa780-55f1-11eb-9149-8d54a1c89c9e.png)
 
 ## 로그인 인증 시
-![](jwt-security-valid.png)
+![image](https://user-images.githubusercontent.com/45007556/104460703-c5dce700-55f1-11eb-8931-991164f48a52.png)
 
 # AuthenticationManager는 Provider를 어떻게 할당 받을까?
 스프링 시큐리티를 공부해 보면 AuthenticationManager는 AuthenticationProvider에게 실질적인 인증 처리를 위임한다고 한다.
