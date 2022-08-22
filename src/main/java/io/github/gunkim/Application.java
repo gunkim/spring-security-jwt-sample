@@ -1,7 +1,7 @@
 package io.github.gunkim;
 
-import io.github.gunkim.domain.Member;
-import io.github.gunkim.domain.MemberRepository;
+import io.github.gunkim.application.persistence.MemberEntity;
+import io.github.gunkim.application.persistence.MemberRepositoryImpl;
 import io.github.gunkim.domain.Role;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,10 +17,10 @@ public class Application{
         SpringApplication.run(Application.class, args);
     }
     @Bean
-    public CommandLineRunner runner(MemberRepository memberRepository, PasswordEncoder passwordEncoder) throws SQLException {
+    public CommandLineRunner runner(MemberRepositoryImpl memberRepositoryImpl, PasswordEncoder passwordEncoder) throws SQLException {
         return (args) -> {
-            Member userMember = memberRepository.save(
-                    Member.builder()
+            MemberEntity userMemberEntity = memberRepositoryImpl.save(
+                    MemberEntity.builder()
                             .username("gunkim")
                             .password(passwordEncoder.encode("test"))
                             .role(Role.USER)

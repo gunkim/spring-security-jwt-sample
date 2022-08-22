@@ -1,5 +1,6 @@
-package io.github.gunkim.domain;
+package io.github.gunkim.application.persistence;
 
+import io.github.gunkim.domain.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @ToString
 @Getter
 @Entity
-public class Member {
+public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -24,7 +25,7 @@ public class Member {
     private Role role;
 
     @Builder
-    public Member(long id, String username, String password, Role role){
+    public MemberEntity(long id, String username, String password, Role role){
         this.id = id;
         this.username = username;
         this.password = password;
