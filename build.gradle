@@ -1,38 +1,27 @@
-buildscript {
-    ext {
-        springBootVersion = '2.2.4.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 }
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
-group = 'com.gun'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+group = 'io.github.gunkim'
+version = '1.0.0'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    implementation group:'org.springframework.boot', name: 'spring-boot-starter-web'
-    compileOnly group:'org.projectlombok', name: 'lombok'
-    annotationProcessor group:'org.projectlombok', name: 'lombok'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
-    implementation group: 'com.h2database', name: 'h2'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.7.3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.3'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    runtimeOnly 'com.h2database:h2:2.1.214'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 }
 
 test {
