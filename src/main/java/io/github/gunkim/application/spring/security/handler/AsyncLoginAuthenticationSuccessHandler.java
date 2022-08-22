@@ -1,7 +1,7 @@
-package io.github.gunkim.security.handler;
+package io.github.gunkim.application.spring.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.gunkim.security.util.JwtUtil;
+import io.github.gunkim.application.spring.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

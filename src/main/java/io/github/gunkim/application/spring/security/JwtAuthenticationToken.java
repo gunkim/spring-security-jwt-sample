@@ -1,4 +1,4 @@
-package io.github.gunkim.security;
+package io.github.gunkim.application.spring.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

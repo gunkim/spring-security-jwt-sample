@@ -1,4 +1,4 @@
-package io.github.gunkim.security;
+package io.github.gunkim.application.spring.security;
 
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;

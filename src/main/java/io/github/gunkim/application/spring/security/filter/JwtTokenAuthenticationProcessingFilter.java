@@ -1,8 +1,8 @@
-package io.github.gunkim.security.filter;
+package io.github.gunkim.application.spring.security.filter;
 
-import io.github.gunkim.security.JwtAuthenticationToken;
-import io.github.gunkim.security.config.SecurityConfig;
-import io.github.gunkim.security.util.JwtUtil;
+import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
+import io.github.gunkim.application.spring.security.config.SecurityConfig;
+import io.github.gunkim.application.spring.security.util.JwtUtil;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

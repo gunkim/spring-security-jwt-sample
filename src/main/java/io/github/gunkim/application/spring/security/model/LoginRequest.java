@@ -1,4 +1,4 @@
-package io.github.gunkim.security.model;
+package io.github.gunkim.application.spring.security.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package io.github.gunkim.security.exception;
+package io.github.gunkim.application.spring.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

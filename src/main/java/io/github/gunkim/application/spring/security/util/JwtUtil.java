@@ -1,6 +1,6 @@
-package io.github.gunkim.security.util;
+package io.github.gunkim.application.spring.security.util;
 
-import io.github.gunkim.security.exception.JwtExpiredTokenException;
+import io.github.gunkim.application.spring.security.exception.JwtExpiredTokenException;
 import io.jsonwebtoken.*;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;

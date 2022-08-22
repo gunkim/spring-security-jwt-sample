@@ -1,6 +1,6 @@
-package io.github.gunkim.security.provider;
+package io.github.gunkim.application.spring.security.provider;
 
-import io.github.gunkim.security.service.CustomUserDetailsService;
+import io.github.gunkim.application.spring.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;

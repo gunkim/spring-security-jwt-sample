@@ -1,4 +1,4 @@
-package io.github.gunkim.security.service;
+package io.github.gunkim.application.spring.security.service;
 
 import io.github.gunkim.domain.Member;
 import io.github.gunkim.domain.MemberRepository;

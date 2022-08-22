@@ -1,4 +1,4 @@
-package io.github.gunkim.security.config;
+package io.github.gunkim.application.spring.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

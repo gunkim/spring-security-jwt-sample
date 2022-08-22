@@ -1,8 +1,8 @@
-package io.github.gunkim.security.filter;
+package io.github.gunkim.application.spring.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.gunkim.security.exception.AuthMethodNotSupportedException;
-import io.github.gunkim.security.model.LoginRequest;
+import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
+import io.github.gunkim.application.spring.security.model.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

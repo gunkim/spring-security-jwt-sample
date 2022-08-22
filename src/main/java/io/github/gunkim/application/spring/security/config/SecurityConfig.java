@@ -1,13 +1,13 @@
-package io.github.gunkim.security.config;
+package io.github.gunkim.application.spring.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.domain.Role;
-import io.github.gunkim.security.SkipPathRequestMatcher;
-import io.github.gunkim.security.filter.AsyncLoginProcessingFilter;
-import io.github.gunkim.security.filter.JwtTokenAuthenticationProcessingFilter;
-import io.github.gunkim.security.provider.AsyncAuthenticationProvider;
-import io.github.gunkim.security.provider.JwtAuthenticationProvider;
-import io.github.gunkim.security.util.JwtUtil;
+import io.github.gunkim.application.spring.security.SkipPathRequestMatcher;
+import io.github.gunkim.application.spring.security.filter.AsyncLoginProcessingFilter;
+import io.github.gunkim.application.spring.security.filter.JwtTokenAuthenticationProcessingFilter;
+import io.github.gunkim.application.spring.security.provider.AsyncAuthenticationProvider;
+import io.github.gunkim.application.spring.security.provider.JwtAuthenticationProvider;
+import io.github.gunkim.application.spring.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

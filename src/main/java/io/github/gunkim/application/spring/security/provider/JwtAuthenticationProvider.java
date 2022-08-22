@@ -1,6 +1,6 @@
-package io.github.gunkim.security.provider;
+package io.github.gunkim.application.spring.security.provider;
 
-import io.github.gunkim.security.JwtAuthenticationToken;
+import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
