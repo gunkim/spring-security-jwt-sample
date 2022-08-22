@@ -1,4 +1,11 @@
 # 스프링 시큐리티와 JWT 연동 연습
+![Java](https://img.shields.io/badge/Java-17-red?logo=java)
+![Spring](https://img.shields.io/badge/Spring-2.7.3-blue?logo=ktor)
+![Gradle](https://img.shields.io/badge/gradle-7.4-blue?logo=gradle)
+[![GitHub license](https://img.shields.io/github/license/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt)
+[![GitHub issues](https://img.shields.io/github/issues/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/issues)
+[![GitHub forks](https://img.shields.io/github/forks/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/fork)
 
 # Gradle 의존성 추가
 ```gradle
