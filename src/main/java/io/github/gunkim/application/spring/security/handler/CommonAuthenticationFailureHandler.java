@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
 import io.github.gunkim.application.spring.security.exception.JwtExpiredTokenException;
 import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,22 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CommonAuthenticationFailureHandler implements AuthenticationFailureHandler {
-
     private final ObjectMapper objectMapper;
 
-    /**
-     * 실패 시 처리 로직
-     * TODO: 예외에 따른 메시지를 response 해줌.
-     *
-     * @param request
-     * @param response
-     * @param exception
-     * @throws IOException
-     * @throws ServletException
-     */
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-        throws IOException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+        AuthenticationException exception) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

@@ -9,23 +9,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.SQLException;
-
 @SpringBootApplication
-public class Application{
+public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
     @Bean
-    public CommandLineRunner runner(MemberRepositoryImpl memberRepositoryImpl, PasswordEncoder passwordEncoder) throws SQLException {
-        return (args) -> {
-            MemberEntity userMemberEntity = memberRepositoryImpl.save(
-                    MemberEntity.builder()
-                            .username("gunkim")
-                            .password(passwordEncoder.encode("test"))
-                            .role(Role.USER)
-                            .build()
-            );
-        };
+    public CommandLineRunner runner(MemberRepositoryImpl memberRepositoryImpl, PasswordEncoder passwordEncoder) {
+        return __ -> memberRepositoryImpl.save(new MemberEntity("gunkim", passwordEncoder.encode("1234"), Role.USER));
     }
 }

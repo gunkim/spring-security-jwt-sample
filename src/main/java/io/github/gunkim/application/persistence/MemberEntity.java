@@ -1,16 +1,13 @@
 package io.github.gunkim.application.persistence;
 
 import io.github.gunkim.domain.Role;
-import lombok.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-import javax.persistence.*;
-
-/**
- * 사용자 테이블
- */
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
-@Getter
 @Entity
 public class MemberEntity {
     @Id
@@ -24,11 +21,28 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Builder
-    public MemberEntity(long id, String username, String password, Role role){
-        this.id = id;
+    protected MemberEntity() {
+    }
+
+    public MemberEntity(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }
