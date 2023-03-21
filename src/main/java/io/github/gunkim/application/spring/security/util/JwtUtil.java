@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
+
     @Value("${jwt.token.secret-key}")
     private String secretKey;
     @Value("${jwt.token.expTime}")
@@ -34,19 +35,21 @@ public class JwtUtil {
         LocalDateTime currentTime = LocalDateTime.now();
 
         return Jwts.builder().setClaims(claims).setIssuer(issuer)
-            .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant())).setExpiration(
-                Date.from(currentTime.plusMinutes(expirationTime).atZone(ZoneId.systemDefault()).toInstant()))
-            .signWith(SignatureAlgorithm.HS512, secretKey).compact();
+                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant())).setExpiration(
+                        Date.from(currentTime.plusMinutes(expirationTime).atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(SignatureAlgorithm.HS512, secretKey).compact();
     }
 
     public Jws<Claims> parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
-        Jws<Claims> claimsJws;
         try {
-            claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-        } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException) {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey.getBytes())
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
             throw new BadCredentialsException("Invalid JWT token: ", ex);
         } catch (ExpiredJwtException expiredEx) {
-            throw new JwtExpiredTokenException(claimsJws.toString(), "JWT Token expired", expiredEx);
-        } return claimsJws;
+            throw new JwtExpiredTokenException(expiredEx.toString(), "JWT Token expired", expiredEx);
+        }
     }
 }

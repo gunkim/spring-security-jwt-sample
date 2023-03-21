@@ -8,24 +8,23 @@ import io.github.gunkim.application.spring.security.provider.AsyncAuthentication
 import io.github.gunkim.application.spring.security.provider.JwtAuthenticationProvider;
 import io.github.gunkim.application.spring.security.util.JwtUtil;
 import io.github.gunkim.domain.Role;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * 스프링 시큐리티 설정을 위한 클래스
- */
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
+
     public static final String AUTHENTICATION_HEADER_NAME = "Authorization";
     public static final String AUTHENTICATION_URL = "/api/auth/login";
     public static final String API_ROOT_URL = "/api/**";
@@ -39,11 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        List<String> permitAllEndpointList = Arrays.asList(
-                AUTHENTICATION_URL
-        );
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration configuration) throws Exception {
         http
                 .csrf().disable()
                 .exceptionHandling()
@@ -55,26 +51,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name())
                 .antMatchers("/api/say/userHello").hasAnyRole(Role.USER.name())
                 .and()
-                .addFilterBefore(buildAsyncLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(permitAllEndpointList, API_ROOT_URL), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(buildAsyncLoginProcessingFilter(configuration.getAuthenticationManager()),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(List.of(AUTHENTICATION_URL), API_ROOT_URL,
+                                configuration.getAuthenticationManager()),
+                        UsernamePasswordAuthenticationFilter.class);
+
+        http.authenticationProvider(jwtAuthenticationProvider);
+        http.authenticationProvider(asyncAuthenticationProvider);
+
+        return http.build();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(jwtAuthenticationProvider);
-        auth.authenticationProvider(asyncAuthenticationProvider);
-    }
-
-    private AsyncLoginProcessingFilter buildAsyncLoginProcessingFilter() throws Exception {
+    private AsyncLoginProcessingFilter buildAsyncLoginProcessingFilter(AuthenticationManager authenticationManager) throws Exception {
         AsyncLoginProcessingFilter filter = new AsyncLoginProcessingFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
-        filter.setAuthenticationManager(this.authenticationManager());
+        filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
 
-    private JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter(List<String> pathsToSkip, String pattern) throws Exception {
+    private JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter(List<String> pathsToSkip, String pattern,
+            AuthenticationManager authenticationManager) {
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, pattern);
         JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(matcher, failureHandler, jwtUtil);
-        filter.setAuthenticationManager(this.authenticationManager());
+        filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
 }
