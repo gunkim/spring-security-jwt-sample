@@ -1,7 +1,7 @@
 package io.github.gunkim;
 
-import io.github.gunkim.application.persistence.MemberEntity;
-import io.github.gunkim.application.persistence.MemberRepositoryImpl;
+import io.github.gunkim.data.MemberEntity;
+import io.github.gunkim.data.MemberJpaRepository;
 import io.github.gunkim.domain.Role;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +16,7 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner runner(MemberRepositoryImpl memberRepositoryImpl, PasswordEncoder passwordEncoder) {
-        return __ -> memberRepositoryImpl.save(new MemberEntity("gunkim", passwordEncoder.encode("1234"), Role.USER));
+    public CommandLineRunner runner(MemberJpaRepository memberJpaRepository, PasswordEncoder passwordEncoder) {
+        return __ -> memberJpaRepository.save(new MemberEntity("gunkim", passwordEncoder.encode("1234"), Role.USER));
     }
 }

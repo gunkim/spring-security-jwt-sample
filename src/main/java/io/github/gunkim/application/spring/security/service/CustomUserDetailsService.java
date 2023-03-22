@@ -1,9 +1,7 @@
 package io.github.gunkim.application.spring.security.service;
 
-import io.github.gunkim.application.persistence.MemberEntity;
-import io.github.gunkim.application.persistence.MemberRepositoryImpl;
-import java.util.ArrayList;
-import java.util.Collection;
+import io.github.gunkim.domain.MemberRepository;
+import java.util.List;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,20 +11,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final MemberRepositoryImpl memberRepositoryImpl;
+    private final MemberRepository memberRepository;
 
-    public CustomUserDetailsService(MemberRepositoryImpl memberRepositoryImpl) {
-        this.memberRepositoryImpl = memberRepositoryImpl;
+    public CustomUserDetailsService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberEntity memberEntity = memberRepositoryImpl.findByUsername(username)
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        final var member = memberRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다. username: %s".formatted(username)));
 
-        Collection<SimpleGrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(memberEntity.getRole().getValue()));
+        final var roles = List.of(new SimpleGrantedAuthority(member.role().value()));
 
-        return new User(memberEntity.getUsername(), memberEntity.getPassword(), roles);
+        return new User(member.username(), member.password(), roles);
     }
 }

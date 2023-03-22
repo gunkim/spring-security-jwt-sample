@@ -1,5 +1,6 @@
-package io.github.gunkim.application.persistence;
+package io.github.gunkim.data;
 
+import io.github.gunkim.domain.Member;
 import io.github.gunkim.domain.Role;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,19 +31,27 @@ public class MemberEntity {
         this.role = role;
     }
 
-    public long getId() {
+    public static MemberEntity from(Member member) {
+        return new MemberEntity(member.username(), member.password(), member.role());
+    }
+
+    public Member toDomain() {
+        return new Member(id, username, password, role);
+    }
+
+    public long id() {
         return id;
     }
 
-    public String getUsername() {
+    public String username() {
         return username;
     }
 
-    public String getPassword() {
+    public String password() {
         return password;
     }
 
-    public Role getRole() {
+    public Role role() {
         return role;
     }
 }
