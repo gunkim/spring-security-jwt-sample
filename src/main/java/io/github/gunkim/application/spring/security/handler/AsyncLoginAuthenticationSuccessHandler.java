@@ -1,7 +1,7 @@
 package io.github.gunkim.application.spring.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.gunkim.application.spring.security.util.JwtUtil;
+import io.github.gunkim.application.spring.security.service.TokenService;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -19,19 +20,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class AsyncLoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
-    private final JwtUtil jwtUtil;
+    private final TokenService tokenService;
 
-    public AsyncLoginAuthenticationSuccessHandler(ObjectMapper objectMapper, JwtUtil jwtUtil) {
+    public AsyncLoginAuthenticationSuccessHandler(ObjectMapper objectMapper, TokenService tokenService) {
         this.objectMapper = objectMapper;
-        this.jwtUtil = jwtUtil;
+        this.tokenService = tokenService;
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException, ServletException {
-        String username = (String) authentication.getPrincipal();
+        String username = ((User) authentication.getPrincipal()).getUsername();
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
-        String jwtToken = jwtUtil.createToken(username, authorities);
+        String jwtToken = tokenService.createToken(username, authorities);
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

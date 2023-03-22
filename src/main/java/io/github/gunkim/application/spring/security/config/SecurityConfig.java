@@ -6,7 +6,7 @@ import io.github.gunkim.application.spring.security.filter.AsyncLoginProcessingF
 import io.github.gunkim.application.spring.security.filter.JwtTokenAuthenticationProcessingFilter;
 import io.github.gunkim.application.spring.security.provider.AsyncAuthenticationProvider;
 import io.github.gunkim.application.spring.security.provider.JwtAuthenticationProvider;
-import io.github.gunkim.application.spring.security.util.JwtUtil;
+import io.github.gunkim.application.spring.security.service.TokenService;
 import io.github.gunkim.domain.Role;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class SecurityConfig {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     private final ObjectMapper objectMapper;
-    private final JwtUtil jwtUtil;
+    private final TokenService tokenService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration configuration) throws Exception {
@@ -72,7 +72,7 @@ public class SecurityConfig {
     private JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter(List<String> pathsToSkip, String pattern,
             AuthenticationManager authenticationManager) {
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, pattern);
-        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(matcher, failureHandler, jwtUtil);
+        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(matcher, failureHandler, tokenService);
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }

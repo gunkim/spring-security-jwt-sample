@@ -1,4 +1,4 @@
-package io.github.gunkim.application.spring.security.util;
+package io.github.gunkim.application.spring.security.service;
 
 import io.github.gunkim.application.spring.security.exception.JwtExpiredTokenException;
 import io.jsonwebtoken.Claims;
@@ -8,36 +8,39 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class JwtUtil {
+@Service
+public class TokenService {
+    private final String secretKey;
+    private final long expirationTime;
+    private final String issuer;
 
-    @Value("${jwt.token.secret-key}")
-    private String secretKey;
-    @Value("${jwt.token.expTime}")
-    private long expirationTime;
-    @Value("${jwt.token.issuer}")
-    private String issuer;
+    public TokenService(@Value("${jwt.token.secret-key}") final String secretKey, @Value("${jwt.token.expTime}") final long expirationTime,
+            @Value("${jwt.token.issuer}") final String issuer) {
+        this.secretKey = secretKey;
+        this.expirationTime = expirationTime;
+        this.issuer = issuer;
+    }
 
     public String createToken(String username, List<GrantedAuthority> authorities) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("roles", authorities.stream().map(role -> role.toString()).collect(Collectors.toList()));
-
         LocalDateTime currentTime = LocalDateTime.now();
 
-        return Jwts.builder().setClaims(claims).setIssuer(issuer)
-                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant())).setExpiration(
-                        Date.from(currentTime.plusMinutes(expirationTime).atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, secretKey).compact();
+        return Jwts.builder()
+                .addClaims(createClaims(username, authorities))
+                .setIssuer(issuer)
+                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(currentTime.plusMinutes(expirationTime).atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public Jws<Claims> parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
@@ -51,5 +54,11 @@ public class JwtUtil {
         } catch (ExpiredJwtException expiredEx) {
             throw new JwtExpiredTokenException(expiredEx.toString(), "JWT Token expired", expiredEx);
         }
+    }
+
+    private Claims createClaims(final String username, final List<GrantedAuthority> authorities) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("roles", authorities.stream().map(Object::toString).toList());
+        return claims;
     }
 }

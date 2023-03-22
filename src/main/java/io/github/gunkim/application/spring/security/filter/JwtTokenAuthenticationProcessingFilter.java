@@ -2,7 +2,7 @@ package io.github.gunkim.application.spring.security.filter;
 
 import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
 import io.github.gunkim.application.spring.security.config.SecurityConfig;
-import io.github.gunkim.application.spring.security.util.JwtUtil;
+import io.github.gunkim.application.spring.security.service.TokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import java.io.IOException;
@@ -20,13 +20,13 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
     private final AuthenticationFailureHandler failureHandler;
-    private final JwtUtil jwtUtil;
+    private final TokenService tokenService;
 
     public JwtTokenAuthenticationProcessingFilter(RequestMatcher matcher, AuthenticationFailureHandler failureHandler,
-        JwtUtil jwtUtil) {
+        TokenService tokenService) {
         super(matcher);
         this.failureHandler = failureHandler;
-        this.jwtUtil = jwtUtil;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         throws AuthenticationException {
         String tokenPayload = request.getHeader(SecurityConfig.AUTHENTICATION_HEADER_NAME);
 
-        Jws<Claims> claimsJws = jwtUtil.parserToken(tokenPayload);
+        Jws<Claims> claimsJws = tokenService.parserToken(tokenPayload);
 
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(claimsJws));
     }
