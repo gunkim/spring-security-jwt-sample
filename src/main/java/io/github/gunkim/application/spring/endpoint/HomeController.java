@@ -1,4 +1,4 @@
-package io.github.gunkim.web;
+package io.github.gunkim.application.spring.endpoint;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
