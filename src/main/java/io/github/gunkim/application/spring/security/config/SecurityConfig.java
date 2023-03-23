@@ -51,14 +51,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http,
         final AuthenticationConfiguration configuration) throws Exception {
-        http.csrf().disable().exceptionHandling().and().sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-            .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name()).antMatchers("/api/say/userHello")
-            .hasAnyRole(Role.USER.name()).and()
-            .addFilterBefore(buildAsyncLoginProcessingFilter(configuration.getAuthenticationManager()),
-                UsernamePasswordAuthenticationFilter.class).addFilterBefore(
-                buildJwtTokenAuthenticationProcessingFilter(List.of(AUTHENTICATION_URL),
-                    configuration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class);
+        final var authenticationManager = configuration.getAuthenticationManager();
+
+        http.csrf().disable()
+            .exceptionHandling()
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name())
+            .antMatchers("/api/say/userHello").hasAnyRole(Role.USER.name())
+            .and()
+            .addFilterBefore(jwtTokenIssueFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager), UsernamePasswordAuthenticationFilter.class);
 
         http.authenticationProvider(jwtAuthenticationProvider);
         http.authenticationProvider(jwtTokenIssueProvider);
@@ -66,14 +71,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-    private JwtTokenIssueFilter buildAsyncLoginProcessingFilter(final AuthenticationManager authenticationManager) {
+    private JwtTokenIssueFilter jwtTokenIssueFilter(final AuthenticationManager authenticationManager) {
         final var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
         filter.setAuthenticationManager(authenticationManager);
 
         return filter;
     }
 
-    private JwtTokenAuthenticationFilter buildJwtTokenAuthenticationProcessingFilter(final List<String> pathsToSkip,
+    private JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter(final List<String> pathsToSkip,
         final AuthenticationManager authenticationManager) {
         final var matcher = new SkipPathRequestMatcher(pathsToSkip, SecurityConfig.API_ROOT_URL);
 
