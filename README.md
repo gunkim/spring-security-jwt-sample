@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/github/license/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt)
 [![GitHub issues](https://img.shields.io/github/issues/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/issues)
-[![GitHub forks](https://img.shields.io/github/forks/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/fork)ㅁ
+[![GitHub forks](https://img.shields.io/github/forks/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/fork)
 
 스프링 시큐리티 이해도를 높이기 위해 전부 커스텀하여 구현했으나 [Spring Security OAuth2 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html) JWT 구현체를 사용하면 기본 세팅으로 더 쉽게 사용이 가능하다.
 
