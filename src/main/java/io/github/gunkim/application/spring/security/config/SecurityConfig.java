@@ -2,14 +2,13 @@ package io.github.gunkim.application.spring.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.SkipPathRequestMatcher;
-import io.github.gunkim.application.spring.security.filter.AsyncLoginProcessingFilter;
-import io.github.gunkim.application.spring.security.filter.JwtTokenAuthenticationProcessingFilter;
-import io.github.gunkim.application.spring.security.provider.AsyncAuthenticationProvider;
+import io.github.gunkim.application.spring.security.filter.JwtTokenAuthenticationFilter;
+import io.github.gunkim.application.spring.security.filter.JwtTokenIssueFilter;
 import io.github.gunkim.application.spring.security.provider.JwtAuthenticationProvider;
+import io.github.gunkim.application.spring.security.provider.JwtTokenIssueProvider;
 import io.github.gunkim.application.spring.security.service.TokenService;
 import io.github.gunkim.domain.Role;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,7 +20,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -32,48 +30,56 @@ public class SecurityConfig {
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
 
-    private final AsyncAuthenticationProvider asyncAuthenticationProvider;
+    private final JwtTokenIssueProvider jwtTokenIssueProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     private final ObjectMapper objectMapper;
     private final TokenService tokenService;
 
+    public SecurityConfig(final AuthenticationSuccessHandler successHandler,
+        final AuthenticationFailureHandler failureHandler, final JwtTokenIssueProvider jwtTokenIssueProvider,
+        final JwtAuthenticationProvider jwtAuthenticationProvider, final ObjectMapper objectMapper,
+        final TokenService tokenService) {
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
+        this.jwtTokenIssueProvider = jwtTokenIssueProvider;
+        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
+        this.objectMapper = objectMapper;
+        this.tokenService = tokenService;
+    }
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration configuration) throws Exception {
-        http
-                .csrf().disable()
-                .exceptionHandling()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name())
-                .antMatchers("/api/say/userHello").hasAnyRole(Role.USER.name())
-                .and()
-                .addFilterBefore(buildAsyncLoginProcessingFilter(configuration.getAuthenticationManager()),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(List.of(AUTHENTICATION_URL), API_ROOT_URL,
-                                configuration.getAuthenticationManager()),
-                        UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain securityFilterChain(final HttpSecurity http,
+        final AuthenticationConfiguration configuration) throws Exception {
+        http.csrf().disable().exceptionHandling().and().sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+            .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name()).antMatchers("/api/say/userHello")
+            .hasAnyRole(Role.USER.name()).and()
+            .addFilterBefore(buildAsyncLoginProcessingFilter(configuration.getAuthenticationManager()),
+                UsernamePasswordAuthenticationFilter.class).addFilterBefore(
+                buildJwtTokenAuthenticationProcessingFilter(List.of(AUTHENTICATION_URL),
+                    configuration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
         http.authenticationProvider(jwtAuthenticationProvider);
-        http.authenticationProvider(asyncAuthenticationProvider);
+        http.authenticationProvider(jwtTokenIssueProvider);
 
         return http.build();
     }
 
-    private AsyncLoginProcessingFilter buildAsyncLoginProcessingFilter(AuthenticationManager authenticationManager) throws Exception {
-        AsyncLoginProcessingFilter filter = new AsyncLoginProcessingFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
+    private JwtTokenIssueFilter buildAsyncLoginProcessingFilter(final AuthenticationManager authenticationManager) {
+        final var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
         filter.setAuthenticationManager(authenticationManager);
+
         return filter;
     }
 
-    private JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter(List<String> pathsToSkip, String pattern,
-            AuthenticationManager authenticationManager) {
-        SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, pattern);
-        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(matcher, failureHandler, tokenService);
+    private JwtTokenAuthenticationFilter buildJwtTokenAuthenticationProcessingFilter(final List<String> pathsToSkip,
+        final AuthenticationManager authenticationManager) {
+        final var matcher = new SkipPathRequestMatcher(pathsToSkip, SecurityConfig.API_ROOT_URL);
+
+        final var filter = new JwtTokenAuthenticationFilter(matcher, failureHandler, tokenService);
         filter.setAuthenticationManager(authenticationManager);
+
         return filter;
     }
 }

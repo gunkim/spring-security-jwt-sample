@@ -9,20 +9,21 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class SkipPathRequestMatcher implements RequestMatcher {
-    private OrRequestMatcher matchers;
-    private RequestMatcher processingMatcher;
+    private final OrRequestMatcher matchers;
+    private final RequestMatcher processingMatcher;
 
-    public SkipPathRequestMatcher(List<String> pathsToSkip, String processingPath) {
+    public SkipPathRequestMatcher(final List<String> pathsToSkip, final String processingPath) {
         if (pathsToSkip == null) {
-            throw new IllegalArgumentException("파라미터를 확인해주세요.");
+            throw new IllegalArgumentException("pathsToSkip cannot be null");
         }
-        List<RequestMatcher> m = pathsToSkip.stream().map(AntPathRequestMatcher::new).collect(toList());
-        matchers = new OrRequestMatcher(m);
-        processingMatcher = new AntPathRequestMatcher(processingPath);
+        List<RequestMatcher> matchers = pathsToSkip.stream().map(AntPathRequestMatcher::new).collect(toList());
+
+        this.matchers = new OrRequestMatcher(matchers);
+        this.processingMatcher = new AntPathRequestMatcher(processingPath);
     }
 
     @Override
-    public boolean matches(HttpServletRequest request) {
+    public boolean matches(final HttpServletRequest request) {
         if (matchers.matches(request)) {
             return false;
         }

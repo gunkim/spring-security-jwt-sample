@@ -6,7 +6,6 @@ import io.github.gunkim.application.spring.security.exception.JwtExpiredTokenExc
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,13 +17,16 @@ import org.springframework.stereotype.Component;
  * 공통 실패 처리 핸들러
  */
 @Component
-@RequiredArgsConstructor
 public class CommonAuthenticationFailureHandler implements AuthenticationFailureHandler {
     private final ObjectMapper objectMapper;
 
+    public CommonAuthenticationFailureHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-        AuthenticationException exception) throws IOException {
+    public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response,
+        final AuthenticationException exception) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

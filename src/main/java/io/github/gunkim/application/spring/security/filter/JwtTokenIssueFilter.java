@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
 import io.github.gunkim.application.spring.security.model.LoginRequest;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,16 +16,14 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-public class AsyncLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
-    private static final Logger logger = Logger.getLogger(AsyncLoginProcessingFilter.class.getName());
+public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;
-
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
 
-    public AsyncLoginProcessingFilter(String defaultFilterProcessesUrl, ObjectMapper objectMapper,
-        AuthenticationSuccessHandler authenticationSuccessHandler,
-        AuthenticationFailureHandler authenticationFailureHandler) {
+    public JwtTokenIssueFilter(final String defaultFilterProcessesUrl, final ObjectMapper objectMapper,
+        final AuthenticationSuccessHandler authenticationSuccessHandler,
+        final AuthenticationFailureHandler authenticationFailureHandler) {
         super(defaultFilterProcessesUrl);
         this.objectMapper = objectMapper;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
@@ -35,15 +31,15 @@ public class AsyncLoginProcessingFilter extends AbstractAuthenticationProcessing
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-        throws AuthenticationException, IOException, ServletException {
-        if (!HttpMethod.POST.name().equals(request.getMethod()) || this.isAsync(request)) {
-            logger.log(Level.FINER, "비동기 로그인 처리 지원이 되지 않는 메소드 요청입니다. :: " + request.getMethod());
+    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
+        throws AuthenticationException, IOException {
+        if (!HttpMethod.POST.name().equals(request.getMethod())) {
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
-        LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+        final var loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+        final var token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
             loginRequest.getPassword());
+
         return this.getAuthenticationManager().authenticate(token);
     }
 
@@ -57,9 +53,5 @@ public class AsyncLoginProcessingFilter extends AbstractAuthenticationProcessing
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException failed) throws IOException, ServletException {
         authenticationFailureHandler.onAuthenticationFailure(request, response, failed);
-    }
-
-    private boolean isAsync(HttpServletRequest request) {
-        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
     }
 }

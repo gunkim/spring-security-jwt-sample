@@ -18,40 +18,39 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
+public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private final AuthenticationFailureHandler failureHandler;
     private final TokenService tokenService;
 
-    public JwtTokenAuthenticationProcessingFilter(RequestMatcher matcher, AuthenticationFailureHandler failureHandler,
-        TokenService tokenService) {
+    public JwtTokenAuthenticationFilter(final RequestMatcher matcher, final AuthenticationFailureHandler failureHandler,
+        final TokenService tokenService) {
         super(matcher);
         this.failureHandler = failureHandler;
         this.tokenService = tokenService;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
         throws AuthenticationException {
-        String tokenPayload = request.getHeader(SecurityConfig.AUTHENTICATION_HEADER_NAME);
-
-        Jws<Claims> claimsJws = tokenService.parserToken(tokenPayload);
+        final String tokenPayload = request.getHeader(SecurityConfig.AUTHENTICATION_HEADER_NAME);
+        final Jws<Claims> claimsJws = tokenService.parserToken(tokenPayload);
 
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(claimsJws));
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-        Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+        final FilterChain chain, final Authentication authentication) throws IOException, ServletException {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authResult);
+        context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         chain.doFilter(request, response);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-        AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+        final AuthenticationException authenticationException) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
-        failureHandler.onAuthenticationFailure(request, response, failed);
+        failureHandler.onAuthenticationFailure(request, response, authenticationException);
     }
 }

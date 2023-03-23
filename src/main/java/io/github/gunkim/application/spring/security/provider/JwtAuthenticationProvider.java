@@ -4,11 +4,9 @@ import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -17,24 +15,23 @@ import org.springframework.stereotype.Component;
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final AuthenticationFailureHandler failureHandler;
 
-    public JwtAuthenticationProvider(AuthenticationFailureHandler failureHandler) {
+    public JwtAuthenticationProvider(final AuthenticationFailureHandler failureHandler) {
         this.failureHandler = failureHandler;
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        Jws<Claims> jwsClaims = (Jws<Claims>) authentication.getCredentials();
-        String subject = jwsClaims.getBody().getSubject();
-        List<String> roles = jwsClaims.getBody().get("roles", List.class);
+    public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
+        final Jws<Claims> jwsClaims = (Jws<Claims>) authentication.getCredentials();
+        final String subject = jwsClaims.getBody().getSubject();
+        final List<String> roles = jwsClaims.getBody().get("roles", List.class);
 
-        List<GrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
+        final var authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
 
         return new JwtAuthenticationToken(subject, authorities);
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(final Class<?> authentication) {
         return (JwtAuthenticationToken.class.isAssignableFrom(authentication));
     }
 }
