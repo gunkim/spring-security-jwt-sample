@@ -36,10 +36,12 @@ public boolean supports(Class<?> authentication) {
 }
 ```
 ## JWT 토큰 인증 시 Filter-Provider 코드
-```
+
+```java
 return getAuthenticationManager().authenticate(new JwtAuthenticationToken(claimsJws));
 ```
-```
+
+```java
 @Override
 public boolean supports(Class<?> authentication) {
     return (JwtAuthenticationToken.class.isAssignableFrom(authentication));
