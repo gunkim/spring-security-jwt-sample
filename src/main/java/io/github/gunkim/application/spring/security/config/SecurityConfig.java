@@ -80,7 +80,7 @@ public class SecurityConfig {
 
     private JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter(final List<String> pathsToSkip,
         final AuthenticationManager authenticationManager) {
-        final var matcher = new SkipPathRequestMatcher(pathsToSkip, SecurityConfig.API_ROOT_URL);
+        final var matcher = new SkipPathRequestMatcher(pathsToSkip, API_ROOT_URL);
 
         final var filter = new JwtTokenAuthenticationFilter(matcher, failureHandler, tokenService);
         filter.setAuthenticationManager(authenticationManager);
