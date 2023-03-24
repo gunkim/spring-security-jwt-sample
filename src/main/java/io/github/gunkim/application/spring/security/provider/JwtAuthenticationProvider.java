@@ -8,17 +8,10 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-    private final AuthenticationFailureHandler failureHandler;
-
-    public JwtAuthenticationProvider(final AuthenticationFailureHandler failureHandler) {
-        this.failureHandler = failureHandler;
-    }
-
     @Override
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
         final Jws<Claims> jwsClaims = (Jws<Claims>) authentication.getCredentials();
