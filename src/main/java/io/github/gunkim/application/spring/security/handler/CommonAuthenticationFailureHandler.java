@@ -13,9 +13,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
-/**
- * 공통 실패 처리 핸들러
- */
 @Component
 public class CommonAuthenticationFailureHandler implements AuthenticationFailureHandler {
     private final ObjectMapper objectMapper;
