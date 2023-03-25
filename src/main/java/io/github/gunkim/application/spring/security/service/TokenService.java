@@ -55,7 +55,7 @@ public class TokenService {
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
             throw new BadCredentialsException("Invalid JWT token: ", ex);
         } catch (ExpiredJwtException expiredEx) {
-            throw new JwtExpiredTokenException(expiredEx.toString(), "JWT Token expired", expiredEx);
+            throw new JwtExpiredTokenException("JWT Token expired", expiredEx);
         }
     }
 
