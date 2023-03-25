@@ -1,12 +1,12 @@
 package io.github.gunkim.application.spring.security.filter;
 
 import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
-import io.github.gunkim.application.spring.security.config.SecurityConfig;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -27,7 +27,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     @Override
     public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
         throws AuthenticationException {
-        final String tokenPayload = request.getHeader(SecurityConfig.AUTHENTICATION_HEADER_NAME);
+        final String tokenPayload = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokenPayload));
     }

@@ -6,7 +6,6 @@ import io.github.gunkim.application.spring.security.filter.JwtTokenAuthenticatio
 import io.github.gunkim.application.spring.security.filter.JwtTokenIssueFilter;
 import io.github.gunkim.application.spring.security.provider.JwtAuthenticationProvider;
 import io.github.gunkim.application.spring.security.provider.JwtTokenIssueProvider;
-import io.github.gunkim.application.spring.security.service.TokenService;
 import io.github.gunkim.domain.Role;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    public static final String AUTHENTICATION_HEADER_NAME = "Authorization";
     public static final String AUTHENTICATION_URL = "/api/auth/login";
     public static final String API_ROOT_URL = "/api/**";
 
