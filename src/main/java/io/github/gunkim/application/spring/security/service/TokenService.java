@@ -1,6 +1,7 @@
 package io.github.gunkim.application.spring.security.service;
 
 import io.github.gunkim.application.spring.security.exception.JwtExpiredTokenException;
+import io.github.gunkim.application.spring.security.service.dto.TokenParserResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -43,17 +44,23 @@ public class TokenService {
                 .compact();
     }
 
-    public Jws<Claims> parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
+    public TokenParserResponse parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey.getBytes())
-                    .build()
-                    .parseClaimsJws(token);
+            return tokenParserResponse(
+                Jwts.parserBuilder()
+                .setSigningKey(secretKey.getBytes())
+                .build()
+                .parseClaimsJws(token)
+            );
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
             throw new BadCredentialsException("Invalid JWT token: ", ex);
         } catch (ExpiredJwtException expiredEx) {
             throw new JwtExpiredTokenException(expiredEx.toString(), "JWT Token expired", expiredEx);
         }
+    }
+
+    private TokenParserResponse tokenParserResponse(Jws<Claims> claimsJws) {
+        return new TokenParserResponse(claimsJws.getBody().getSubject(), claimsJws.getBody().get("roles", List.class));
     }
 
     private Claims createClaims(final String username, final List<GrantedAuthority> authorities) {

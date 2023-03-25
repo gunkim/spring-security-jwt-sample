@@ -1,37 +1,35 @@
 package io.github.gunkim.application.spring.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
-    private final Jws<Claims> claimsJws;
+    private final String jwtToken;
     private final String username;
 
-    public JwtAuthenticationToken(final Jws<Claims> claimsJws) {
+    public JwtAuthenticationToken(final String jwtToken) {
         super(null);
-        this.claimsJws = claimsJws;
         this.setAuthenticated(false);
+        this.jwtToken = jwtToken;
         this.username = null;
     }
 
     public JwtAuthenticationToken(final String username, final Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.eraseCredentials();
-        this.username = username;
         super.setAuthenticated(true);
-        this.claimsJws = null;
+        this.username = username;
+        this.jwtToken = null;
     }
 
     @Override
-    public Object getCredentials() {
-        return this.claimsJws;
+    public String getCredentials() {
+        return this.jwtToken;
     }
 
     @Override
-    public Object getPrincipal() {
+    public String getPrincipal() {
         return username;
     }
 }
