@@ -34,18 +34,15 @@ public class SecurityConfig {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     private final ObjectMapper objectMapper;
-    private final TokenService tokenService;
 
     public SecurityConfig(final AuthenticationSuccessHandler successHandler,
         final AuthenticationFailureHandler failureHandler, final JwtTokenIssueProvider jwtTokenIssueProvider,
-        final JwtAuthenticationProvider jwtAuthenticationProvider, final ObjectMapper objectMapper,
-        final TokenService tokenService) {
+        final JwtAuthenticationProvider jwtAuthenticationProvider, final ObjectMapper objectMapper) {
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
         this.jwtTokenIssueProvider = jwtTokenIssueProvider;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.objectMapper = objectMapper;
-        this.tokenService = tokenService;
     }
 
     @Bean
