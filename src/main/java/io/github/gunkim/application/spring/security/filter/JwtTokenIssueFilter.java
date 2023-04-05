@@ -37,8 +37,8 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
         final var loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-        final var token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
-            loginRequest.getPassword());
+        final var token = new UsernamePasswordAuthenticationToken(loginRequest.username(),
+            loginRequest.password());
 
         return this.getAuthenticationManager().authenticate(token);
     }
