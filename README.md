@@ -10,7 +10,6 @@
 스프링 시큐리티 이해도를 높이기 위해 전부 커스텀하여 구현했으나 [Spring Security OAuth2 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html) JWT 구현체를 사용하면 기본 세팅으로 더 쉽게 사용이 가능하다.
 
 # 개요
-대충 흐름을 그려보았는데 아래와 같은 그림이 될 것 같다.
 
 ## 로그인 시
 ![1](https://user-images.githubusercontent.com/45007556/104460769-dbeaa780-55f1-11eb-9149-8d54a1c89c9e.png)
