@@ -16,12 +16,10 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    private final AuthenticationFailureHandler failureHandler;
-
     public JwtTokenAuthenticationFilter(final RequestMatcher matcher,
         final AuthenticationFailureHandler failureHandler) {
         super(matcher);
-        this.failureHandler = failureHandler;
+        this.setAuthenticationFailureHandler(failureHandler);
     }
 
     @Override
@@ -46,6 +44,6 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
         final AuthenticationException authenticationException) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
-        failureHandler.onAuthenticationFailure(request, response, authenticationException);
+        getFailureHandler().onAuthenticationFailure(request, response, authenticationException);
     }
 }
