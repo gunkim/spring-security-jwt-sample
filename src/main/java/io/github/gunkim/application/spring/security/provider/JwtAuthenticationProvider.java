@@ -37,6 +37,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     }
 
     private List<SimpleGrantedAuthority> authorities(TokenParserResponse response) {
-        return response.roles().stream().map(Role::name).map(SimpleGrantedAuthority::new).toList();
+        return response.roles().stream()
+            .map(Role::name)
+            .map(SimpleGrantedAuthority::new)
+            .toList();
     }
 }
