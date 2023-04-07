@@ -1,6 +1,7 @@
 package io.github.gunkim.application.spring.security;
 
 import java.util.Collection;
+import java.util.Objects;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -31,5 +32,25 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     @Override
     public String getPrincipal() {
         return username;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        JwtAuthenticationToken that = (JwtAuthenticationToken) o;
+        return Objects.equals(jwtToken, that.jwtToken) && Objects.equals(username, that.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), jwtToken, username);
     }
 }
