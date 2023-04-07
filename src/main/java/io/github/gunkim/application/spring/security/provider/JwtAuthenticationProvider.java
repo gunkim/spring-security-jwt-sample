@@ -20,18 +20,18 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         return authenticate((JwtAuthenticationToken) authentication);
     }
 
     @Override
-    public boolean supports(final Class<?> authentication) {
+    public boolean supports(Class<?> authentication) {
         return (JwtAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
-    private Authentication authenticate(final JwtAuthenticationToken authentication) throws AuthenticationException {
-        final String jwtToken = authentication.getCredentials();
-        final TokenParserResponse response = tokenService.parserToken(jwtToken);
+    private Authentication authenticate(JwtAuthenticationToken authentication) throws AuthenticationException {
+        String jwtToken = authentication.getCredentials();
+        TokenParserResponse response = tokenService.parserToken(jwtToken);
 
         return new JwtAuthenticationToken(response.username(), authorities(response));
     }

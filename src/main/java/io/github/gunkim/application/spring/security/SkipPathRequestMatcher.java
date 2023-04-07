@@ -12,18 +12,16 @@ public class SkipPathRequestMatcher implements RequestMatcher {
     private final OrRequestMatcher matchers;
     private final RequestMatcher processingMatcher;
 
-    public SkipPathRequestMatcher(final List<String> pathsToSkip, final String processingPath) {
+    public SkipPathRequestMatcher(List<String> pathsToSkip, String processingPath) {
         if (pathsToSkip == null) {
             throw new IllegalArgumentException("pathsToSkip cannot be null");
         }
-        List<RequestMatcher> matchers = pathsToSkip.stream().map(AntPathRequestMatcher::new).collect(toList());
-
-        this.matchers = new OrRequestMatcher(matchers);
+        this.matchers = new OrRequestMatcher(pathsToSkip.stream().map(AntPathRequestMatcher::new).collect(toList()));
         this.processingMatcher = new AntPathRequestMatcher(processingPath);
     }
 
     @Override
-    public boolean matches(final HttpServletRequest request) {
+    public boolean matches(HttpServletRequest request) {
         if (matchers.matches(request)) {
             return false;
         }

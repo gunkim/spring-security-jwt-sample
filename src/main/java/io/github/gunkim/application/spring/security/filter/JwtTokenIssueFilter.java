@@ -17,9 +17,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;
 
-    public JwtTokenIssueFilter(final String defaultFilterProcessesUrl, final ObjectMapper objectMapper,
-        final AuthenticationSuccessHandler authenticationSuccessHandler,
-        final AuthenticationFailureHandler authenticationFailureHandler) {
+    public JwtTokenIssueFilter(String defaultFilterProcessesUrl, ObjectMapper objectMapper,
+        AuthenticationSuccessHandler authenticationSuccessHandler,
+        AuthenticationFailureHandler authenticationFailureHandler) {
         super(defaultFilterProcessesUrl);
         this.objectMapper = objectMapper;
         this.setAuthenticationSuccessHandler(authenticationSuccessHandler);
@@ -27,14 +27,14 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
     }
 
     @Override
-    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException, IOException {
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
 
-        final var loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-        final var token = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
+        var loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+        var token = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
 
         return this.getAuthenticationManager().authenticate(token);
     }

@@ -9,14 +9,14 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private final String jwtToken;
     private final String username;
 
-    public JwtAuthenticationToken(final String jwtToken) {
+    public JwtAuthenticationToken(String jwtToken) {
         super(null);
         this.setAuthenticated(false);
         this.jwtToken = jwtToken;
         this.username = null;
     }
 
-    public JwtAuthenticationToken(final String username, final Collection<? extends GrantedAuthority> authorities) {
+    public JwtAuthenticationToken(String username, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.eraseCredentials();
         super.setAuthenticated(true);

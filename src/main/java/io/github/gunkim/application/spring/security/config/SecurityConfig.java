@@ -33,9 +33,9 @@ public class SecurityConfig {
 
     private final ObjectMapper objectMapper;
 
-    public SecurityConfig(final AuthenticationSuccessHandler successHandler,
-        final AuthenticationFailureHandler failureHandler, final JwtTokenIssueProvider jwtTokenIssueProvider,
-        final JwtAuthenticationProvider jwtAuthenticationProvider, final ObjectMapper objectMapper) {
+    public SecurityConfig(AuthenticationSuccessHandler successHandler,
+        AuthenticationFailureHandler failureHandler, JwtTokenIssueProvider jwtTokenIssueProvider,
+        JwtAuthenticationProvider jwtAuthenticationProvider, ObjectMapper objectMapper) {
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
         this.jwtTokenIssueProvider = jwtTokenIssueProvider;
@@ -44,9 +44,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(final HttpSecurity http,
-        final AuthenticationConfiguration configuration) throws Exception {
-        final var authenticationManager = configuration.getAuthenticationManager();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration configuration)
+        throws Exception {
+        var authenticationManager = configuration.getAuthenticationManager();
 
         http.csrf().disable()
             .exceptionHandling()
@@ -58,7 +58,10 @@ public class SecurityConfig {
             .antMatchers("/api/say/userHello").hasAnyRole(Role.USER.name())
             .and()
             .addFilterBefore(jwtTokenIssueFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(
+                jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager),
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         http.authenticationProvider(jwtAuthenticationProvider);
         http.authenticationProvider(jwtTokenIssueProvider);
@@ -66,18 +69,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-    private JwtTokenIssueFilter jwtTokenIssueFilter(final AuthenticationManager authenticationManager) {
-        final var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
+    private JwtTokenIssueFilter jwtTokenIssueFilter(AuthenticationManager authenticationManager) {
+        var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
         filter.setAuthenticationManager(authenticationManager);
 
         return filter;
     }
 
-    private JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter(final List<String> pathsToSkip,
-        final AuthenticationManager authenticationManager) {
-        final var matcher = new SkipPathRequestMatcher(pathsToSkip, API_ROOT_URL);
+    private JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter(List<String> pathsToSkip,
+        AuthenticationManager authenticationManager) {
+        var matcher = new SkipPathRequestMatcher(pathsToSkip, API_ROOT_URL);
 
-        final var filter = new JwtTokenAuthenticationFilter(matcher, failureHandler);
+        var filter = new JwtTokenAuthenticationFilter(matcher, failureHandler);
         filter.setAuthenticationManager(authenticationManager);
 
         return filter;

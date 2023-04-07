@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -19,22 +20,21 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public JwtTokenIssueProvider(final PasswordEncoder passwordEncoder,
-        final CustomUserDetailsService customUserDetailsService) {
+    public JwtTokenIssueProvider(PasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
-    public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if (isNull(authentication)) {
             throw new IllegalArgumentException("authentication 발급 오류");
         }
 
-        final var username = (String) authentication.getPrincipal();
-        final var password = (String) authentication.getCredentials();
+        var username = (String) authentication.getPrincipal();
+        var password = (String) authentication.getCredentials();
 
-        final var user = customUserDetailsService.loadUserByUsername(username);
+        UserDetails user = customUserDetailsService.loadUserByUsername(username);
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("인증 실패. username or password 불일치");
         }
@@ -48,7 +48,7 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
     }
 
     @Override
-    public boolean supports(final Class<?> authentication) {
+    public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
 }

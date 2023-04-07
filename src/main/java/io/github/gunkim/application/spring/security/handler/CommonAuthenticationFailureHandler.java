@@ -22,8 +22,8 @@ public class CommonAuthenticationFailureHandler implements AuthenticationFailure
     }
 
     @Override
-    public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response,
-        final AuthenticationException exception) throws IOException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+        AuthenticationException exception) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
