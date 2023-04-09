@@ -1,5 +1,7 @@
 package io.github.gunkim.application.spring.security.handler;
 
+import static java.util.Objects.isNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.service.TokenService;
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler
         objectMapper.writeValue(response.getWriter(), jwtToken);
 
         var session = request.getSession(false);
-        if (session != null) {
+        if (!isNull(session)) {
             session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         }
     }
