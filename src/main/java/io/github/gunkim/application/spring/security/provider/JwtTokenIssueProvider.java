@@ -39,16 +39,18 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
             throw new BadCredentialsException("인증 실패. username or password 불일치");
         }
 
-        List<SimpleGrantedAuthority> authorities = user.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .map(SimpleGrantedAuthority::new)
-            .toList();
-
-        return new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
+        return new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities(user));
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
+    }
+
+    private static List<SimpleGrantedAuthority> authorities(UserDetails user) {
+        return user.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .map(SimpleGrantedAuthority::new)
+            .toList();
     }
 }
