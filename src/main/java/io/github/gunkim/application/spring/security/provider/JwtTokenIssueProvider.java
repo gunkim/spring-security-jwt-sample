@@ -1,7 +1,5 @@
 package io.github.gunkim.application.spring.security.provider;
 
-import static java.util.Objects.isNull;
-
 import io.github.gunkim.application.spring.security.service.CustomUserDetailsService;
 import java.util.List;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -30,17 +28,21 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
         var username = (String) authentication.getPrincipal();
         var password = (String) authentication.getCredentials();
 
+        return authenticate(username, password);
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
+    }
+
+    private UsernamePasswordAuthenticationToken authenticate(String username, String password) {
         UserDetails user = customUserDetailsService.loadUserByUsername(username);
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("인증 실패. username or password 불일치");
         }
 
         return new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities(user));
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
     private static List<SimpleGrantedAuthority> authorities(UserDetails user) {
