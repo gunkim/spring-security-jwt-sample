@@ -43,7 +43,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     }
 
     @Override
-    protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
         final AuthenticationException authenticationException) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
         getFailureHandler().onAuthenticationFailure(request, response, authenticationException);
