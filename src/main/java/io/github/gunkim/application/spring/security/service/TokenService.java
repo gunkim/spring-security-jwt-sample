@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,15 +23,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TokenService {
-    private final String secretKey;
+    private final SecretKey key;
     private final long expirationTime;
     private final String issuer;
 
     public TokenService(
-        @Value("${jwt.token.secret-key}") String secretKey,
+        @Value("${jwt.token.secret-key}") String key,
         @Value("${jwt.token.expTime}") long expirationTime,
         @Value("${jwt.token.issuer}") String issuer) {
-        this.secretKey = secretKey;
+        this.key = Keys.hmacShaKeyFor(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
         this.expirationTime = expirationTime;
         this.issuer = issuer;
     }
@@ -44,14 +45,15 @@ public class TokenService {
             .setIssuer(issuer)
             .setIssuedAt(toDate(issuedAt))
             .setExpiration(toDate(expiredAt))
-            .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256).compact();
+            .signWith(key)
+            .compact();
     }
 
     public TokenParserResponse parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
         try {
             return tokenParserResponse(
                 Jwts.parserBuilder()
-                    .setSigningKey(secretKey.getBytes())
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
             );
