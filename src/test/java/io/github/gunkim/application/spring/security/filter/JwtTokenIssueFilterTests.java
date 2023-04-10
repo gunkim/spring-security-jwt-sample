@@ -22,20 +22,26 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @ExtendWith(MockitoExtension.class)
 class JwtTokenIssueFilterTests {
     @Mock
     private AuthenticationManager authenticationManager;
+    @Mock
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    @Mock
+    private AuthenticationFailureHandler authenticationFailureHandler;
     private JwtTokenIssueFilter sut;
 
     @BeforeEach
     void setup() {
         sut = new JwtTokenIssueFilter(
-                "/login",
-                new ObjectMapper(),
-                null,
-                null
+            "/login",
+            new ObjectMapper(),
+            authenticationSuccessHandler,
+            authenticationFailureHandler
         );
         sut.setAuthenticationManager(authenticationManager);
     }
@@ -47,8 +53,8 @@ class JwtTokenIssueFilterTests {
         request.setMethod(method);
 
         assertThatThrownBy(() -> sut.attemptAuthentication(request, null))
-                .isInstanceOf(AuthMethodNotSupportedException.class)
-                .hasMessage("Authentication method not supported");
+            .isInstanceOf(AuthMethodNotSupportedException.class)
+            .hasMessage("Authentication method not supported");
     }
 
     @Test
@@ -60,14 +66,14 @@ class JwtTokenIssueFilterTests {
         request.setContent(new ObjectMapper().writeValueAsBytes(loginRequest));
 
         when(authenticationManager.authenticate(any(Authentication.class)))
-                .thenReturn(new UsernamePasswordAuthenticationToken("gunkim", null, List.of()));
+            .thenReturn(new UsernamePasswordAuthenticationToken("gunkim", null, List.of()));
 
         var certedAuthentication = sut.attemptAuthentication(request, null);
 
         assertAll(
-                () -> assertThat(certedAuthentication).isNotNull(),
-                () -> assertThat(certedAuthentication.getPrincipal()).isEqualTo("gunkim"),
-                () -> assertThat(certedAuthentication.isAuthenticated()).isTrue()
+            () -> assertThat(certedAuthentication).isNotNull(),
+            () -> assertThat(certedAuthentication.getPrincipal()).isEqualTo("gunkim"),
+            () -> assertThat(certedAuthentication.isAuthenticated()).isTrue()
         );
     }
 }
