@@ -27,10 +27,6 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        if (isNull(authentication)) {
-            throw new IllegalArgumentException("authentication 발급 오류");
-        }
-
         var username = (String) authentication.getPrincipal();
         var password = (String) authentication.getCredentials();
 
