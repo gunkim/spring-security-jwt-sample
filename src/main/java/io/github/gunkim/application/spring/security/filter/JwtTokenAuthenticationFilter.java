@@ -1,5 +1,7 @@
 package io.github.gunkim.application.spring.security.filter;
 
+import static java.util.Objects.isNull;
+
 import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -7,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -24,7 +27,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException {
-        String tokenPayload = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String tokenPayload = extractToken(request.getHeader(HttpHeaders.AUTHORIZATION));
 
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokenPayload));
     }
@@ -44,5 +47,12 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
         final AuthenticationException authenticationException) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
         getFailureHandler().onAuthenticationFailure(request, response, authenticationException);
+    }
+
+    private String extractToken(String tokenPayload) {
+        if (isNull(tokenPayload) || !tokenPayload.startsWith("Bearer ")) {
+            throw new BadCredentialsException("Invalid token");
+        }
+        return tokenPayload.replace("Bearer ", "");
     }
 }
