@@ -8,11 +8,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.crypto.SecretKey;
@@ -31,12 +32,12 @@ public class TokenService {
         @Value("${jwt.token.secret-key}") String key,
         @Value("${jwt.token.expTime}") long expirationTime,
         @Value("${jwt.token.issuer}") String issuer) {
-        this.key = Keys.hmacShaKeyFor(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
+        this.key = Keys.hmacShaKeyFor(key.getBytes());
         this.expirationTime = expirationTime;
         this.issuer = issuer;
     }
 
-    public String createToken(String username, List<GrantedAuthority> authorities) {
+    public String createToken(String username, Collection<GrantedAuthority> authorities) {
         LocalDateTime issuedAt = LocalDateTime.now();
         LocalDateTime expiredAt = issuedAt.plusMinutes(expirationTime);
 
@@ -57,8 +58,8 @@ public class TokenService {
                     .build()
                     .parseClaimsJws(token)
             );
-        } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
-            throw new BadCredentialsException("Invalid JWT token: ", ex);
+        } catch (SignatureException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
+            throw new BadCredentialsException("Invalid JWT token", ex);
         } catch (ExpiredJwtException expiredEx) {
             throw new JwtExpiredTokenException("JWT Token expired", expiredEx);
         }
@@ -67,12 +68,12 @@ public class TokenService {
     @SuppressWarnings("unchecked")
     private TokenParserResponse tokenParserResponse(Jws<Claims> claimsJws) {
         String username = claimsJws.getBody().getSubject();
-        List<Role> roles = claimsJws.getBody().get("roles", List.class);
+        List<String> roles = claimsJws.getBody().get("roles", List.class);
 
-        return new TokenParserResponse(username, roles);
+        return new TokenParserResponse(username, roles.stream().map(Role::of).toList());
     }
 
-    private Claims createClaims(String username, List<GrantedAuthority> authorities) {
+    private Claims createClaims(String username, Collection<GrantedAuthority> authorities) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", authorities.stream().map(Object::toString).toList());
         return claims;
