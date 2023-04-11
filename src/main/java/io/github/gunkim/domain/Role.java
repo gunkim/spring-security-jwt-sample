@@ -12,6 +12,15 @@ public enum Role {
         this.value = value;
     }
 
+    public static Role of(String value) {
+        for (Role role : values()) {
+            if (role.value.equals(value)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("잘못된 권한입니다.");
+    }
+
     public String title() {
         return title;
     }
