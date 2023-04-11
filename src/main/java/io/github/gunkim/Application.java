@@ -17,6 +17,9 @@ public class Application {
 
     @Bean
     public CommandLineRunner runner(MemberJpaRepository memberJpaRepository, PasswordEncoder passwordEncoder) {
-        return __ -> memberJpaRepository.save(new MemberEntity("gunkim", passwordEncoder.encode("1234"), Role.USER));
+        return __ -> {
+            memberJpaRepository.save(new MemberEntity("user", passwordEncoder.encode("1234"), Role.USER));
+            memberJpaRepository.save(new MemberEntity("admin", passwordEncoder.encode("1234"), Role.ADMIN));
+        };
     }
 }
