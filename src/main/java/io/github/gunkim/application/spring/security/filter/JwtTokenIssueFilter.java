@@ -29,7 +29,7 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException, IOException {
-        if (!HttpMethod.POST.name().equals(request.getMethod())) {
+        if (!isPostMethod(request)) {
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
 
@@ -37,5 +37,9 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
         var token = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
 
         return this.getAuthenticationManager().authenticate(token);
+    }
+
+    private boolean isPostMethod(HttpServletRequest request) {
+        return HttpMethod.POST.name().equals(request.getMethod());
     }
 }
