@@ -2,7 +2,7 @@ package io.github.gunkim.application.spring.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
-import io.github.gunkim.application.spring.security.model.LoginRequest;
+import io.github.gunkim.application.spring.security.filter.request.LoginRequest;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
-import io.github.gunkim.application.spring.security.model.LoginRequest;
+import io.github.gunkim.application.spring.security.filter.request.LoginRequest;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
