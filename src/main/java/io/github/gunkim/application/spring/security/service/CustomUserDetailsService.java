@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다. username: %s".formatted(username)));
 
         var roles = List.of(new SimpleGrantedAuthority(member.role().value()));
-
         return new User(member.username(), member.password(), roles);
     }
 }
