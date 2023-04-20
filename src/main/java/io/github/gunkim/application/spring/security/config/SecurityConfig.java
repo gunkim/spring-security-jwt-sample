@@ -8,6 +8,7 @@ import io.github.gunkim.application.spring.security.provider.JwtAuthenticationPr
 import io.github.gunkim.application.spring.security.provider.JwtTokenIssueProvider;
 import io.github.gunkim.domain.Role;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     public static final String AUTHENTICATION_URL = "/api/auth/login";
@@ -32,16 +34,6 @@ public class SecurityConfig {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     private final ObjectMapper objectMapper;
-
-    public SecurityConfig(AuthenticationSuccessHandler successHandler,
-        AuthenticationFailureHandler failureHandler, JwtTokenIssueProvider jwtTokenIssueProvider,
-        JwtAuthenticationProvider jwtAuthenticationProvider, ObjectMapper objectMapper) {
-        this.successHandler = successHandler;
-        this.failureHandler = failureHandler;
-        this.jwtTokenIssueProvider = jwtTokenIssueProvider;
-        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
-        this.objectMapper = objectMapper;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {

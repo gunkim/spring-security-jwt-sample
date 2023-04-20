@@ -3,15 +3,13 @@ package io.github.gunkim.data;
 import io.github.gunkim.domain.Member;
 import io.github.gunkim.domain.MemberRepository;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepository {
     private final MemberJpaRepository memberJpaRepository;
-
-    public MemberRepositoryImpl(MemberJpaRepository memberJpaRepository) {
-        this.memberJpaRepository = memberJpaRepository;
-    }
 
     @Override
     public Member save(Member member) {

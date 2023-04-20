@@ -8,6 +8,7 @@ import io.github.gunkim.application.spring.security.service.TokenService;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,14 +18,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
     private final TokenService tokenService;
-
-    public JwtTokenIssueSuccessHandler(ObjectMapper objectMapper, TokenService tokenService) {
-        this.objectMapper = objectMapper;
-        this.tokenService = tokenService;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

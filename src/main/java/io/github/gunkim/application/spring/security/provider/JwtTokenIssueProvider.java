@@ -1,6 +1,7 @@
 package io.github.gunkim.application.spring.security.provider;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,14 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenIssueProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
-
-    public JwtTokenIssueProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
