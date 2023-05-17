@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.Arrays;
+
 @Getter
 @RequiredArgsConstructor
 @Accessors(fluent = true)
@@ -15,11 +17,9 @@ public enum Role {
     private final String value;
 
     public static Role of(String value) {
-        for (Role role : values()) {
-            if (role.value.equals(value)) {
-                return role;
-            }
-        }
-        throw new IllegalArgumentException("잘못된 권한입니다.");
+        return Arrays.stream(values())
+                .filter(role -> role.value.equals(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 권한입니다."));
     }
 }
