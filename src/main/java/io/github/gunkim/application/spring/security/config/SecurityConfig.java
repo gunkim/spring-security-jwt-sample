@@ -61,9 +61,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * 엔드포인트에 대한 권한 설정
-     */
     private HttpSecurity authority(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
             .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name())
