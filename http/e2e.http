@@ -16,9 +16,9 @@ POST localhost:8080/api/auth/login
 }
 
 ### 어드민 권한 엔드포인트
-GET localhost:8080/api/say/adminHello
+GET localhost:8080/api/say/admin
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaXNzIjoiZ3Vua2ltIiwiaWF0IjoxNjgxMjA1NDg3LCJleHAiOjE3ODkyMDU0ODd9.gcngjRiSQTPqr7H-vFpY-dV6y2vQhimBwEDMSgcLXes
 
 ### 유저 권한 엔드포인트
-GET localhost:8080/api/say/userHello
+GET localhost:8080/api/say/user
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndW5raW0iLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiZ3Vua2ltIiwiaWF0IjoxNjgxMjAzODUzLCJleHAiOjE3ODkyMDM4NTN9.voirq_vk6FUxmQAXjwpPV3XwoZ6yaBi6Se-aV75AIjQ

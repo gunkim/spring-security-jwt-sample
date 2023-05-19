@@ -63,8 +63,8 @@ public class SecurityConfig {
 
     private HttpSecurity authority(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
-            .antMatchers("/api/say/adminHello").hasAnyRole(Role.ADMIN.name())
-            .antMatchers("/api/say/userHello").hasAnyRole(Role.USER.name())
+            .antMatchers("/api/say/admin").hasAnyRole(Role.ADMIN.name())
+            .antMatchers("/api/say/user").hasAnyRole(Role.USER.name())
             .and();
     }
 
