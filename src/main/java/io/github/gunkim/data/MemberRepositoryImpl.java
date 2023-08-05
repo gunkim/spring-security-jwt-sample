@@ -19,6 +19,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Optional<Member> findByUsername(String username) {
-        return memberJpaRepository.findByUsername(username).map(MemberEntity::toDomain);
+        return memberJpaRepository.findByUsername(username)
+                .map(MemberEntity::toDomain);
     }
 }
