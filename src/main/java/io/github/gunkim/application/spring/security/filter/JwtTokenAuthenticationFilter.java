@@ -1,13 +1,6 @@
 package io.github.gunkim.application.spring.security.filter;
 
-import static java.util.Objects.isNull;
-
 import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -18,6 +11,14 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static java.util.Objects.isNull;
+
 public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     public JwtTokenAuthenticationFilter(RequestMatcher matcher, AuthenticationFailureHandler failureHandler) {
         super(matcher);
@@ -26,7 +27,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-        throws AuthenticationException {
+            throws AuthenticationException {
         String tokenPayload = extractToken(request.getHeader(HttpHeaders.AUTHORIZATION));
 
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokenPayload));
@@ -34,7 +35,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-        Authentication authentication) throws IOException, ServletException {
+                                            Authentication authentication) throws IOException, ServletException {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
 
@@ -44,7 +45,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-        final AuthenticationException authenticationException) throws IOException, ServletException {
+                                              AuthenticationException authenticationException) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
         getFailureHandler().onAuthenticationFailure(request, response, authenticationException);
     }

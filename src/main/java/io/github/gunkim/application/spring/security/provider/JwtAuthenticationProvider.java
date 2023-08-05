@@ -4,13 +4,14 @@ import io.github.gunkim.application.spring.security.JwtAuthenticationToken;
 import io.github.gunkim.application.spring.security.service.TokenService;
 import io.github.gunkim.application.spring.security.service.dto.TokenParserResponse;
 import io.github.gunkim.domain.Role;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -36,8 +37,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private List<SimpleGrantedAuthority> authorities(TokenParserResponse response) {
         return response.roles().stream()
-            .map(Role::value)
-            .map(SimpleGrantedAuthority::new)
-            .toList();
+                .map(Role::value)
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 }

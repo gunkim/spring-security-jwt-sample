@@ -2,9 +2,10 @@ package io.github.gunkim.data;
 
 import io.github.gunkim.domain.Member;
 import io.github.gunkim.domain.MemberRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

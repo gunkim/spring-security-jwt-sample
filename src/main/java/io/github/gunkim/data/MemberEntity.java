@@ -2,14 +2,14 @@ package io.github.gunkim.data;
 
 import io.github.gunkim.domain.Member;
 import io.github.gunkim.domain.Role;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
+import javax.persistence.*;
 
 @Entity
+@Getter
+@Accessors(fluent = true)
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,21 +37,5 @@ public class MemberEntity {
 
     public Member toDomain() {
         return new Member(id, username, password, role);
-    }
-
-    public long id() {
-        return id;
-    }
-
-    public String username() {
-        return username;
-    }
-
-    public String password() {
-        return password;
-    }
-
-    public Role role() {
-        return role;
     }
 }

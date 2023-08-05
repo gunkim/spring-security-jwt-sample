@@ -6,4 +6,7 @@ public record Member(
     String password,
     Role role
 ) {
+    public String roleValue() {
+        return role.value();
+    }
 }

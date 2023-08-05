@@ -19,8 +19,8 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
     private final ObjectMapper objectMapper;
 
     public JwtTokenIssueFilter(String defaultFilterProcessesUrl, ObjectMapper objectMapper,
-        AuthenticationSuccessHandler authenticationSuccessHandler,
-        AuthenticationFailureHandler authenticationFailureHandler) {
+                               AuthenticationSuccessHandler authenticationSuccessHandler,
+                               AuthenticationFailureHandler authenticationFailureHandler) {
         super(defaultFilterProcessesUrl);
         this.objectMapper = objectMapper;
         this.setAuthenticationSuccessHandler(authenticationSuccessHandler);
@@ -29,7 +29,7 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-        throws AuthenticationException, IOException {
+            throws AuthenticationException, IOException {
         if (!isPostMethod(request)) {
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }

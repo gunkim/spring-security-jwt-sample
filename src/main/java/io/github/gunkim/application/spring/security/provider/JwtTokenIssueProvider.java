@@ -45,8 +45,8 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
 
     private List<SimpleGrantedAuthority> authorities(UserDetails user) {
         return user.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .map(SimpleGrantedAuthority::new)
-            .toList();
+                .map(GrantedAuthority::getAuthority)
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 }

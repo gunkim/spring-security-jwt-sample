@@ -1,13 +1,8 @@
 package io.github.gunkim.application.spring.security.handler;
 
-import static java.util.Objects.isNull;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.handler.response.TokenResponse;
 import io.github.gunkim.application.spring.security.service.TokenService;
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +12,12 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static java.util.Objects.isNull;
+
 @Component
 @RequiredArgsConstructor
 public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler {
@@ -25,12 +26,12 @@ public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-        Authentication authentication) throws IOException {
+                                        Authentication authentication) throws IOException {
         onAuthenticationSuccess(request, response, (UsernamePasswordAuthenticationToken) authentication);
     }
 
     private void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-        UsernamePasswordAuthenticationToken authentication) throws IOException {
+                                         UsernamePasswordAuthenticationToken authentication) throws IOException {
         String username = authentication.getPrincipal().toString();
         var authorities = authentication.getAuthorities();
 

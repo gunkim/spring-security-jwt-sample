@@ -1,9 +1,10 @@
 package io.github.gunkim.application.spring.security;
 
-import java.util.Collection;
-import java.util.Objects;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.Objects;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private final String jwtToken;
