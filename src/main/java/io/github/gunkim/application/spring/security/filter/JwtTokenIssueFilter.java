@@ -3,9 +3,6 @@ package io.github.gunkim.application.spring.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
 import io.github.gunkim.application.spring.security.filter.request.LoginRequest;
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +10,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;
@@ -34,7 +35,7 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
         }
 
         var loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-        var token = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
+        var token = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
 
         return this.getAuthenticationManager().authenticate(token);
     }

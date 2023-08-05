@@ -1,6 +1,5 @@
 package io.github.gunkim.application.spring.security.provider;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
             throw new BadCredentialsException("인증 실패. username or password 불일치");
         }
 
-        return new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities(user));
+        return UsernamePasswordAuthenticationToken.authenticated(user.getUsername(), null, authorities(user));
     }
 
     private static List<SimpleGrantedAuthority> authorities(UserDetails user) {
