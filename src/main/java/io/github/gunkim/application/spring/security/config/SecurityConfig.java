@@ -31,13 +31,11 @@ public class SecurityConfig {
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
 
-    private final JwtTokenIssueProvider jwtTokenIssueProvider;
-    private final JwtAuthenticationProvider jwtAuthenticationProvider;
-
     private final ObjectMapper objectMapper;
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, JwtTokenIssueProvider jwtTokenIssueProvider,
+                                                       JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
         var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider);
         authenticationManagerBuilder.authenticationProvider(jwtTokenIssueProvider);
