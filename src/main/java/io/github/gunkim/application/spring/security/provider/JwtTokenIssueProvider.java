@@ -43,7 +43,7 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
         return UsernamePasswordAuthenticationToken.authenticated(user.getUsername(), null, authorities(user));
     }
 
-    private static List<SimpleGrantedAuthority> authorities(UserDetails user) {
+    private List<SimpleGrantedAuthority> authorities(UserDetails user) {
         return user.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .map(SimpleGrantedAuthority::new)
