@@ -3,6 +3,8 @@ package io.github.gunkim.application.spring.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
 import io.github.gunkim.application.spring.security.filter.request.LoginRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,8 +13,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {

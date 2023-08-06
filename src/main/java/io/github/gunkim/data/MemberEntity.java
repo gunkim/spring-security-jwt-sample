@@ -2,10 +2,14 @@ package io.github.gunkim.data;
 
 import io.github.gunkim.domain.Member;
 import io.github.gunkim.domain.Role;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
-import javax.persistence.*;
 
 @Entity
 @Getter

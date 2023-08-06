@@ -9,10 +9,12 @@ import io.github.gunkim.application.spring.security.provider.JwtTokenIssueProvid
 import io.github.gunkim.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -21,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.List;
 
+@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -34,6 +37,18 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
 
     @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager)
+            throws Exception {
+        return http.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(configurer -> configurer.disable())
+                .exceptionHandling(configurer -> configurer.disable())
+                .authorizeHttpRequests(this::authorizeHttpRequests)
+                .addFilterBefore(jwtTokenIssueFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager), UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, JwtTokenIssueProvider jwtTokenIssueProvider,
                                                        JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
         var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
@@ -43,28 +58,10 @@ public class SecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager)
-            throws Exception {
-        authority(http.csrf().disable()
-                .exceptionHandling()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and())
-                .addFilterBefore(jwtTokenIssueFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(
-                        jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager),
-                        UsernamePasswordAuthenticationFilter.class
-                );
-
-        return http.build();
-    }
-
-    private HttpSecurity authority(HttpSecurity http) throws Exception {
-        return http.authorizeRequests()
-                .antMatchers("/api/say/admin").hasAnyRole(Role.ADMIN.name())
-                .antMatchers("/api/say/user").hasAnyRole(Role.USER.name())
-                .and();
+    private void authorizeHttpRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry configurer) {
+        configurer
+                .requestMatchers("/api/say/admin").hasAnyRole(Role.ADMIN.name())
+                .requestMatchers("/api/say/user").hasAnyRole(Role.USER.name());
     }
 
     private JwtTokenIssueFilter jwtTokenIssueFilter(AuthenticationManager authenticationManager) {
@@ -77,7 +74,6 @@ public class SecurityConfig {
     private JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter(List<String> pathsToSkip,
                                                                       AuthenticationManager authenticationManager) {
         var matcher = new SkipPathRequestMatcher(pathsToSkip, API_ROOT_URL);
-
         var filter = new JwtTokenAuthenticationFilter(matcher, failureHandler);
         filter.setAuthenticationManager(authenticationManager);
 
