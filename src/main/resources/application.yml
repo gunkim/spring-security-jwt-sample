@@ -3,3 +3,6 @@ jwt:
     secret-key: "E12RM8Wca/SdQmJ9eAUZded/PtgNkc8btKaRrBrKSQc="
     expTime: 1800000
     issuer: "gunkim"
+spring:
+  jpa:
+    open-in-view: false
