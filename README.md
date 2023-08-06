@@ -1,6 +1,6 @@
 # 스프링 시큐리티와 JWT 연동 연습
 ![Java](https://img.shields.io/badge/Java-17-red?logo=java)
-![Spring](https://img.shields.io/badge/Spring-2.7.3-blue?logo=ktor)
+![Spring Boot](https://img.shields.io/badge/SpringBoot-3.1.2-blue?logo=ktor)
 ![Gradle](https://img.shields.io/badge/gradle-7.4-blue?logo=gradle)
 [![GitHub license](https://img.shields.io/github/license/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt)
@@ -8,6 +8,8 @@
 [![GitHub forks](https://img.shields.io/github/forks/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/fork)
 
 스프링 시큐리티 이해도를 높이기 위해 전부 커스텀하여 구현했으나 [Spring Security OAuth2 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html) JWT 구현체를 사용하면 기본 세팅으로 더 쉽게 사용이 가능하다.
+
+2023년 8월 6일 기준 Spring Boot 3.X.X로 마이그레이션했으니 2.X.X 버전을 참고하고 싶다면 [이 곳](https://github.com/gunkim/springboot-security-jwt/tree/ce60a09d59d2790f663233d4a67c1287ddf938b8)을 참고하면 된다. 
 
 # 개요
 
