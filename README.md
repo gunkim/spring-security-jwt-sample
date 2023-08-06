@@ -25,7 +25,7 @@
 ## 둘 이상의 Provider가 전달된 경우 Authentication을 가지고 판단한다.
 만약 여러 개의 Provider가 등록이 되어 있을 경우, AuthenticationManager는 어떻게 어떤 Provider에게 위임할 지를 결정할까?
 AuthenticationManager을 구현한 ProviderManager [API 문서](https://docs.spring.io/spring-security/site/docs/4.2.15.RELEASE/apidocs/org/springframework/security/authentication/ProviderManager.html#authenticate-org.springframework.security.core.Authentication-) 를 보면 둘 이상의 Provider가 등록된 경우 Authentication을 처리할 수 있는 Provider를 찾아 할당한다고 한다.
-## 비동기 로그인 처리 시 Filter-Provider 코드
+## 로그인 처리 시 Filter-Provider 코드
 ```java
 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
 return this.getAuthenticationManager().authenticate(token);
