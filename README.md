@@ -1,4 +1,4 @@
-# 스프링 시큐리티와 JWT 연동 연습
+# Spring security with JWT
 ![Java](https://img.shields.io/badge/Java-17-red?logo=java)
 ![Spring Boot](https://img.shields.io/badge/SpringBoot-3.1.2-blue?logo=ktor)
 ![Gradle](https://img.shields.io/badge/gradle-7.4-blue?logo=gradle)
