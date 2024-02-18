@@ -1,7 +1,7 @@
 package io.github.gunkim;
 
-import io.github.gunkim.data.MemberEntity;
-import io.github.gunkim.data.MemberJpaRepository;
+import io.github.gunkim.domain.Member;
+import io.github.gunkim.domain.MemberRepository;
 import io.github.gunkim.domain.Role;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,10 +16,10 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner runner(MemberJpaRepository memberJpaRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner runner(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         return __ -> {
-            memberJpaRepository.save(new MemberEntity("user", passwordEncoder.encode("1234"), Role.USER));
-            memberJpaRepository.save(new MemberEntity("admin", passwordEncoder.encode("1234"), Role.ADMIN));
+            memberRepository.save(new Member("user", passwordEncoder.encode("1234"), Role.USER));
+            memberRepository.save(new Member("admin", passwordEncoder.encode("1234"), Role.ADMIN));
         };
     }
 }
