@@ -1,6 +1,5 @@
 package io.github.gunkim.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.security.exception.AuthMethodNotSupportedException;
 import io.github.gunkim.security.filter.request.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,17 +11,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 
 public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
-    public JwtTokenIssueFilter(String defaultFilterProcessesUrl, ObjectMapper objectMapper,
+    public JwtTokenIssueFilter(String defaultFilterProcessesUrl, JsonMapper jsonMapper,
                                AuthenticationSuccessHandler authenticationSuccessHandler,
                                AuthenticationFailureHandler authenticationFailureHandler) {
         super(defaultFilterProcessesUrl);
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
         this.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         this.setAuthenticationFailureHandler(authenticationFailureHandler);
     }
@@ -34,7 +34,7 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
 
-        var loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+        var loginRequest = jsonMapper.readValue(request.getReader(), LoginRequest.class);
         var token = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
 
         return this.getAuthenticationManager().authenticate(token);

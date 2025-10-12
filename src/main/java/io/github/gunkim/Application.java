@@ -8,16 +8,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootApplication
 public class Application {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     @Bean
+    public JsonMapper jsonMapper() {
+        return JsonMapper.builder().build();
+    }
+
+    @Bean
     public CommandLineRunner runner(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
-        return __ -> {
+        return _ -> {
             memberRepository.save(new Member("user", passwordEncoder.encode("1234"), Role.USER));
             memberRepository.save(new Member("admin", passwordEncoder.encode("1234"), Role.ADMIN));
         };

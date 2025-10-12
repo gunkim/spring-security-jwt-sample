@@ -1,7 +1,7 @@
 package io.github.gunkim.security;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -17,8 +17,13 @@ public class SkipPathRequestMatcher implements RequestMatcher {
         if (pathsToSkip == null) {
             throw new IllegalArgumentException("pathsToSkip cannot be null");
         }
-        this.matchers = new OrRequestMatcher(pathsToSkip.stream().map(AntPathRequestMatcher::new).collect(toList()));
-        this.processingMatcher = new AntPathRequestMatcher(processingPath);
+        PathPatternRequestMatcher.Builder builder = PathPatternRequestMatcher.withDefaults();
+        this.matchers = new OrRequestMatcher(
+                pathsToSkip.stream()
+                        .map(builder::matcher)
+                        .collect(toList())
+        );
+        this.processingMatcher = builder.matcher(processingPath);
     }
 
     @Override

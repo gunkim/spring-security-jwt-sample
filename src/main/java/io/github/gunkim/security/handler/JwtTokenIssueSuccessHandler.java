@@ -1,6 +1,5 @@
 package io.github.gunkim.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.security.handler.response.TokenResponse;
 import io.github.gunkim.security.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ import static java.util.Objects.isNull;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
     private final TokenService tokenService;
 
     @Override
@@ -39,7 +39,7 @@ public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), tokenResponse);
+        jsonMapper.writeValue(response.getWriter(), tokenResponse);
 
         var session = request.getSession(false);
         if (!isNull(session)) {

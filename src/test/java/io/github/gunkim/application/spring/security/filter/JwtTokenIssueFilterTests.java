@@ -1,16 +1,8 @@
 package io.github.gunkim.application.spring.security.filter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.gunkim.application.spring.security.exception.AuthMethodNotSupportedException;
-import io.github.gunkim.application.spring.security.filter.request.LoginRequest;
-import java.io.IOException;
-import java.util.List;
+import io.github.gunkim.security.exception.AuthMethodNotSupportedException;
+import io.github.gunkim.security.filter.JwtTokenIssueFilter;
+import io.github.gunkim.security.filter.request.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +16,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JwtTokenIssueFilterTests {
@@ -39,7 +41,7 @@ class JwtTokenIssueFilterTests {
     void setup() {
         sut = new JwtTokenIssueFilter(
             "/login",
-            new ObjectMapper(),
+                JsonMapper.builder().build(),
             authenticationSuccessHandler,
             authenticationFailureHandler
         );
@@ -63,7 +65,7 @@ class JwtTokenIssueFilterTests {
 
         var request = new MockHttpServletRequest();
         request.setMethod("POST");
-        request.setContent(new ObjectMapper().writeValueAsBytes(loginRequest));
+        request.setContent(JsonMapper.builder().build().writeValueAsBytes(loginRequest));
 
         when(authenticationManager.authenticate(any(Authentication.class)))
             .thenReturn(new UsernamePasswordAuthenticationToken("gunkim", null, List.of()));

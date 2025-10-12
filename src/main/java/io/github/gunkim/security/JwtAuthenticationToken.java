@@ -11,7 +11,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private final String username;
 
     public JwtAuthenticationToken(String jwtToken) {
-        super(null);
+        super((Collection<? extends GrantedAuthority>) null);
         this.setAuthenticated(false);
         this.jwtToken = jwtToken;
         this.username = null;

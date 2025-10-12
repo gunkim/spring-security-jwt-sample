@@ -1,8 +1,8 @@
 package io.github.gunkim.security.service;
 
+import io.github.gunkim.domain.Role;
 import io.github.gunkim.security.exception.JwtExpiredTokenException;
 import io.github.gunkim.security.service.dto.TokenParserResponse;
-import io.github.gunkim.domain.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -49,10 +49,10 @@ public class TokenService {
     public TokenParserResponse parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
         try {
             return tokenParserResponse(
-                    Jwts.parserBuilder()
-                            .setSigningKey(key)
+                    Jwts.parser()
+                            .verifyWith(key)
                             .build()
-                            .parseClaimsJws(token));
+                            .parseSignedClaims(token));
         } catch (SignatureException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
             throw new BadCredentialsException("Invalid JWT token", ex);
         } catch (ExpiredJwtException expiredEx) {
@@ -69,10 +69,10 @@ public class TokenService {
     }
 
     private Claims createClaims(String username, Collection<GrantedAuthority> authorities) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put(AUTHORITIES_KEY, authorities.stream().map(Object::toString).toList());
-
-        return claims;
+        return Jwts.claims()
+                .subject(username)
+                .add(AUTHORITIES_KEY, authorities.stream().map(Object::toString).toList())
+                .build();
     }
 
     private Date toDate(LocalDateTime dateTime) {
