@@ -1,7 +1,8 @@
 # Spring security with JWT
-![Java](https://img.shields.io/badge/Java-17-red?logo=java)
-![Spring Boot](https://img.shields.io/badge/SpringBoot-3.1.2-blue?logo=ktor)
-![Gradle](https://img.shields.io/badge/gradle-7.4-blue?logo=gradle)
+
+![Java](https://img.shields.io/badge/Java-25-red?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/SpringBoot-4.0.0--M3-blue?logo=springboot)
+![Gradle](https://img.shields.io/badge/gradle-9.1-blue?logo=gradle)
 [![GitHub license](https://img.shields.io/github/license/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt)
 [![GitHub issues](https://img.shields.io/github/issues/gunkim/springboot-security-jwt)](https://github.com/gunkim/springboot-security-jwt/issues)
@@ -9,7 +10,69 @@
 
 스프링 시큐리티 이해도를 높이기 위해 전부 커스텀하여 구현했으나 [Spring Security OAuth2 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html) JWT 구현체를 사용하면 기본 세팅으로 더 쉽게 사용이 가능하다.
 
-2023년 8월 6일 기준 Spring Boot 3.X.X로 마이그레이션했으니 2.X.X 버전을 참고하고 싶다면 [이 곳](https://github.com/gunkim/springboot-security-jwt/tree/ce60a09d59d2790f663233d4a67c1287ddf938b8)을 참고하면 된다. 
+## 버전 이력
+
+- **2025년 1월**: Java 25, Spring Boot 4.0.0-M3, Gradle 9.1로 메이저 버전 업데이트
+  - Jackson ObjectMapper → JsonMapper 마이그레이션
+- **2023년 8월 6일**: Spring Boot 3.X.X로
+  마이그레이션 ([2.X.X 버전 참고](https://github.com/gunkim/springboot-security-jwt/tree/ce60a09d59d2790f663233d4a67c1287ddf938b8))
+
+## 기술 스택
+
+- **Java 25**: 최신 Java LTS 버전
+- **Spring Boot 4.0.0-M3**: 최신 Spring Boot 마일스톤 버전
+- **Spring Security 7**: 최신 보안 프레임워크
+- **JJWT 0.13.0**: JWT 토큰 생성 및 검증
+- **Jackson 3.x (JsonMapper)**: JSON 직렬화/역직렬화
+- **Spring Data JPA**: 데이터 영속성 관리
+- **H2 Database**: 인메모리 데이터베이스
+- **Gradle 9.1**: 빌드 도구
+
+## 프로젝트 특징
+
+- ✅ Spring Security 7 커스텀 필터 체인 구현
+- ✅ JWT 기반 Stateless 인증
+- ✅ 역할(Role) 기반 권한 관리
+- ✅ schema.sql/data.sql 기반 데이터베이스 초기화
+
+## 시작하기
+
+### 요구 사항
+
+- Java 25 이상
+- Gradle 9.1 이상
+
+### 프로젝트 실행
+
+```bash
+# 프로젝트 빌드
+./gradlew build
+
+# 애플리케이션 실행
+./gradlew bootRun
+```
+
+### 테스트 계정
+
+프로젝트 시작 시 `data.sql`을 통해 자동으로 생성되는 계정입니다.
+
+| Username | Password | Role  |
+|----------|----------|-------|
+| user     | 1234     | USER  |
+| admin    | 1234     | ADMIN |
+
+### API 테스트 예시
+
+```bash
+# 1. 로그인 (JWT 토큰 발급)
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"user","password":"1234"}'
+
+# 2. 인증이 필요한 API 호출
+curl -X GET http://localhost:8080/api/say/user \
+  -H "Authorization: Bearer {발급받은_JWT_토큰}"
+```
 
 # 개요
 
