@@ -28,7 +28,6 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     public static final String AUTHENTICATION_URL = "/api/auth/login";
     public static final String API_ROOT_URL = "/api/**";
 
@@ -57,7 +56,6 @@ public class SecurityConfig {
 
         return authenticationManagerBuilder.build();
     }
-
 
     private void authorizeHttpRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry configurer) {
         configurer

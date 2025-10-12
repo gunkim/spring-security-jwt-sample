@@ -38,10 +38,10 @@ public class TokenService {
         LocalDateTime expiredAt = issuedAt.plusMinutes(expirationTime);
 
         return Jwts.builder()
-                .addClaims(createClaims(username, authorities))
-                .setIssuer(issuer)
-                .setIssuedAt(toDate(issuedAt))
-                .setExpiration(toDate(expiredAt))
+                .claims(createClaims(username, authorities))
+                .issuer(issuer)
+                .issuedAt(toDate(issuedAt))
+                .expiration(toDate(expiredAt))
                 .signWith(key)
                 .compact();
     }
@@ -62,8 +62,8 @@ public class TokenService {
 
     @SuppressWarnings("unchecked")
     private TokenParserResponse tokenParserResponse(Jws<Claims> claimsJws) {
-        String username = claimsJws.getBody().getSubject();
-        List<String> roles = claimsJws.getBody().get(AUTHORITIES_KEY, List.class);
+        String username = claimsJws.getPayload().getSubject();
+        List<String> roles = claimsJws.getPayload().get(AUTHORITIES_KEY, List.class);
 
         return new TokenParserResponse(username, roles.stream().map(Role::of).toList());
     }
