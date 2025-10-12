@@ -1,8 +1,21 @@
 jwt:
   token:
     secret-key: "E12RM8Wca/SdQmJ9eAUZded/PtgNkc8btKaRrBrKSQc="
-    expTime: 1800000
+    expTime: 1800000 # 30분
     issuer: "gunkim"
 spring:
   jpa:
     open-in-view: false
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+      mode: always
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        security.web: TRACE

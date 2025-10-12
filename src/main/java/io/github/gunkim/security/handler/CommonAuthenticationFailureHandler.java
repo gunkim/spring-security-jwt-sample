@@ -1,6 +1,5 @@
 package io.github.gunkim.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gunkim.security.handler.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,13 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class CommonAuthenticationFailureHandler implements AuthenticationFailureHandler {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -25,6 +25,6 @@ public class CommonAuthenticationFailureHandler implements AuthenticationFailure
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
-        objectMapper.writeValue(response.getWriter(), new ErrorResponse(exception.getMessage()));
+        jsonMapper.writeValue(response.getWriter(), new ErrorResponse(exception.getMessage()));
     }
 }

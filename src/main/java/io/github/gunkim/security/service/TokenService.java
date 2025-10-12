@@ -1,8 +1,8 @@
 package io.github.gunkim.security.service;
 
+import io.github.gunkim.domain.Role;
 import io.github.gunkim.security.exception.JwtExpiredTokenException;
 import io.github.gunkim.security.service.dto.TokenParserResponse;
-import io.github.gunkim.domain.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -38,10 +38,10 @@ public class TokenService {
         LocalDateTime expiredAt = issuedAt.plusMinutes(expirationTime);
 
         return Jwts.builder()
-                .addClaims(createClaims(username, authorities))
-                .setIssuer(issuer)
-                .setIssuedAt(toDate(issuedAt))
-                .setExpiration(toDate(expiredAt))
+                .claims(createClaims(username, authorities))
+                .issuer(issuer)
+                .issuedAt(toDate(issuedAt))
+                .expiration(toDate(expiredAt))
                 .signWith(key)
                 .compact();
     }
@@ -49,10 +49,10 @@ public class TokenService {
     public TokenParserResponse parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
         try {
             return tokenParserResponse(
-                    Jwts.parserBuilder()
-                            .setSigningKey(key)
+                    Jwts.parser()
+                            .verifyWith(key)
                             .build()
-                            .parseClaimsJws(token));
+                            .parseSignedClaims(token));
         } catch (SignatureException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
             throw new BadCredentialsException("Invalid JWT token", ex);
         } catch (ExpiredJwtException expiredEx) {
@@ -62,17 +62,17 @@ public class TokenService {
 
     @SuppressWarnings("unchecked")
     private TokenParserResponse tokenParserResponse(Jws<Claims> claimsJws) {
-        String username = claimsJws.getBody().getSubject();
-        List<String> roles = claimsJws.getBody().get(AUTHORITIES_KEY, List.class);
+        String username = claimsJws.getPayload().getSubject();
+        List<String> roles = claimsJws.getPayload().get(AUTHORITIES_KEY, List.class);
 
         return new TokenParserResponse(username, roles.stream().map(Role::of).toList());
     }
 
     private Claims createClaims(String username, Collection<GrantedAuthority> authorities) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put(AUTHORITIES_KEY, authorities.stream().map(Object::toString).toList());
-
-        return claims;
+        return Jwts.claims()
+                .subject(username)
+                .add(AUTHORITIES_KEY, authorities.stream().map(Object::toString).toList())
+                .build();
     }
 
     private Date toDate(LocalDateTime dateTime) {

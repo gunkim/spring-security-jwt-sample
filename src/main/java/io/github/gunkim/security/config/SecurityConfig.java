@@ -1,12 +1,11 @@
 package io.github.gunkim.security.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.gunkim.domain.Role;
 import io.github.gunkim.security.SkipPathRequestMatcher;
 import io.github.gunkim.security.filter.JwtTokenAuthenticationFilter;
 import io.github.gunkim.security.filter.JwtTokenIssueFilter;
 import io.github.gunkim.security.provider.JwtAuthenticationProvider;
 import io.github.gunkim.security.provider.JwtTokenIssueProvider;
-import io.github.gunkim.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 
@@ -28,14 +28,13 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     public static final String AUTHENTICATION_URL = "/api/auth/login";
     public static final String API_ROOT_URL = "/api/**";
 
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager)
@@ -65,7 +64,7 @@ public class SecurityConfig {
     }
 
     private JwtTokenIssueFilter jwtTokenIssueFilter(AuthenticationManager authenticationManager) {
-        var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
+        var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, jsonMapper, successHandler, failureHandler);
         filter.setAuthenticationManager(authenticationManager);
 
         return filter;
