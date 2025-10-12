@@ -12,9 +12,9 @@
 
 ## 버전 이력
 
-- **2025년 1월**: Java 25, Spring Boot 4.0.0-M3, Gradle 9.1로 메이저 버전 업데이트
+- **2025년 10월**: Java 25, Spring Boot 4.0.0-M3, Gradle 9.1로 메이저 버전 업데이트
   - Jackson ObjectMapper → JsonMapper 마이그레이션
-- **2023년 8월 6일**: Spring Boot 3.X.X로
+- **2023년 8월**: Spring Boot 3.X.X로
   마이그레이션 ([2.X.X 버전 참고](https://github.com/gunkim/springboot-security-jwt/tree/ce60a09d59d2790f663233d4a67c1287ddf938b8))
 
 ## 기술 스택
