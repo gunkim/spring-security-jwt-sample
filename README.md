@@ -21,7 +21,6 @@
 
 - **Java 25**: 최신 Java LTS 버전
 - **Spring Boot 4.0.0-M3**: 최신 Spring Boot 마일스톤 버전
-- **Spring Security 7**: 최신 보안 프레임워크
 - **JJWT 0.13.0**: JWT 토큰 생성 및 검증
 - **Jackson 3.x (JsonMapper)**: JSON 직렬화/역직렬화
 - **Spring Data JPA**: 데이터 영속성 관리
@@ -34,6 +33,53 @@
 - ✅ JWT 기반 Stateless 인증
 - ✅ 역할(Role) 기반 권한 관리
 - ✅ schema.sql/data.sql 기반 데이터베이스 초기화
+
+## 패키지 구조
+
+```
+src/main/java/io/github/gunkim
+├── Application.java                          # Spring Boot 애플리케이션 진입점
+├── domain/                                    # 도메인 엔티티 및 리포지토리
+│   ├── Member.java                           # 회원 엔티티
+│   ├── MemberRepository.java                 # 회원 리포지토리
+│   └── Role.java                             # 권한 Enum
+├── endpoint/                                  # REST API 컨트롤러
+│   └── HomeController.java                   # 테스트용 엔드포인트
+└── security/                                  # Spring Security 설정 및 구현
+    ├── config/                                # 설정 클래스
+    │   ├── JsonMapperConfig.java             # JsonMapper 빈 설정
+    │   ├── PasswordConfig.java               # PasswordEncoder 빈 설정
+    │   └── SecurityConfig.java               # Security 필터 체인 설정
+    ├── exception/                             # 커스텀 예외
+    │   ├── AuthMethodNotSupportedException.java
+    │   └── JwtExpiredTokenException.java
+    ├── filter/                                # 커스텀 필터
+    │   ├── JwtTokenAuthenticationFilter.java # JWT 토큰 인증 필터
+    │   ├── JwtTokenIssueFilter.java          # 로그인 처리 필터
+    │   └── request/
+    │       └── LoginRequest.java             # 로그인 요청 DTO
+    ├── handler/                               # 인증 성공/실패 핸들러
+    │   ├── CommonAuthenticationFailureHandler.java
+    │   ├── JwtTokenIssueSuccessHandler.java
+    │   └── response/
+    │       ├── ErrorResponse.java            # 에러 응답 DTO
+    │       └── TokenResponse.java            # 토큰 응답 DTO
+    ├── provider/                              # 인증 제공자
+    │   ├── JwtAuthenticationProvider.java    # JWT 토큰 인증 처리
+    │   └── JwtTokenIssueProvider.java        # 로그인 인증 처리
+    ├── service/                               # 비즈니스 로직
+    │   ├── CustomUserDetailsService.java     # 사용자 정보 조회
+    │   ├── TokenService.java                 # JWT 토큰 생성/파싱
+    │   └── dto/
+    │       └── TokenParserResponse.java      # 토큰 파싱 결과 DTO
+    ├── JwtAuthenticationToken.java           # JWT 인증 토큰 객체
+    └── SkipPathRequestMatcher.java           # 경로 매칭 유틸리티
+
+src/main/resources/
+├── application.yml                            # 애플리케이션 설정
+├── schema.sql                                 # 데이터베이스 스키마 DDL
+└── data.sql                                   # 초기 데이터 DML
+```
 
 ## 시작하기
 
