@@ -104,8 +104,8 @@ src/main/resources/
 
 | Username | Password | Role  |
 |----------|----------|-------|
-| user     | 1234     | USER  |
-| admin    | 1234     | ADMIN |
+| user     | 1234     | user  |
+| admin    | 1234     | admin |
 
 ### API 테스트 예시
 
